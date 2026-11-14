@@ -1,0 +1,178 @@
+{
+ "built": "2026-11-14 17:08",
+ "display_px": 1110,
+ "cell_px": 10,
+ "ncell": 111,
+ "cell_scale": 100,
+ "cell_nodata": -32768,
+ "pols": [
+  "hv",
+  "hh"
+ ],
+ "labels": {
+  "0": "no clear optical view",
+  "1": "unburned (dNBR below 0.10)",
+  "2": "in between, not scored",
+  "3": "burned (dNBR above 0.27)",
+  "4": "severely burned (dNBR above 0.44)"
+ },
+ "stretch_db": {
+  "hv": [
+   -20.0,
+   -7.0
+  ],
+  "hh": [
+   -14.0,
+   -2.0
+  ]
+ },
+ "rule_db": -1.0,
+ "dnbr": {
+  "burned": 0.27,
+  "severe": 0.44,
+  "unburned": 0.1
+ },
+ "pre_season_end": "2026-07-31",
+ "windows": {
+  "w1": {
+   "label": "Window 1, Pulang Pisau canal blocks",
+   "bbox": [
+    113.95,
+    -2.85,
+    114.15,
+    -2.65
+   ],
+   "tracks": {
+    "125": {
+     "direction": "ascending",
+     "dates": [
+      "2026-06-22",
+      "2026-07-04",
+      "2026-07-16",
+      "2026-08-21",
+      "2026-09-02",
+      "2026-09-14",
+      "2026-10-08",
+      "2026-10-20",
+      "2026-11-01"
+     ],
+     "baseline": "2026-07-16",
+     "pre_season": [
+      "2026-06-22",
+      "2026-07-04",
+      "2026-07-16"
+     ],
+     "cells": "cells_w1_t125.bin"
+    },
+    "61": {
+     "direction": "descending",
+     "dates": [
+      "2026-06-18",
+      "2026-06-30",
+      "2026-07-12",
+      "2026-07-24",
+      "2026-08-17",
+      "2026-08-29",
+      "2026-10-04",
+      "2026-10-16"
+     ],
+     "baseline": "2026-07-24",
+     "pre_season": [
+      "2026-06-18",
+      "2026-06-30",
+      "2026-07-12",
+      "2026-07-24"
+     ],
+     "cells": "cells_w1_t61.bin"
+    }
+   },
+   "optical": {
+    "overlay": "optical_w1.png",
+    "labels": "labels_w1.bin",
+    "clear_share": 0.586,
+    "counts": {
+     "0": 5101,
+     "1": 1905,
+     "2": 2328,
+     "3": 1478,
+     "4": 1509
+    }
+   },
+   "hotspots": {
+    "file": "hotspots_w1.json",
+    "count": 8782,
+    "first": "2026-06-22",
+    "last": "2026-11-13"
+   }
+  },
+  "w2": {
+   "label": "Window 2, 50 km north-west",
+   "bbox": [
+    113.7,
+    -2.4,
+    113.9,
+    -2.2
+   ],
+   "tracks": {
+    "125": {
+     "direction": "ascending",
+     "dates": [
+      "2026-06-22",
+      "2026-07-04",
+      "2026-07-16",
+      "2026-08-21",
+      "2026-09-02",
+      "2026-09-14",
+      "2026-10-08",
+      "2026-10-20",
+      "2026-11-01"
+     ],
+     "baseline": "2026-07-16",
+     "pre_season": [
+      "2026-06-22",
+      "2026-07-04",
+      "2026-07-16"
+     ],
+     "cells": "cells_w2_t125.bin"
+    },
+    "61": {
+     "direction": "descending",
+     "dates": [
+      "2026-06-18",
+      "2026-06-30",
+      "2026-07-12",
+      "2026-07-24",
+      "2026-08-17",
+      "2026-10-16"
+     ],
+     "baseline": "2026-07-24",
+     "pre_season": [
+      "2026-06-18",
+      "2026-06-30",
+      "2026-07-12",
+      "2026-07-24"
+     ],
+     "cells": "cells_w2_t61.bin"
+    }
+   },
+   "optical": {
+    "overlay": "optical_w2.png",
+    "labels": "labels_w2.bin",
+    "clear_share": 0.341,
+    "counts": {
+     "0": 8173,
+     "1": 2753,
+     "2": 960,
+     "3": 284,
+     "4": 151
+    }
+   },
+   "hotspots": {
+    "file": "hotspots_w2.json",
+    "count": 12218,
+    "first": "2026-06-22",
+    "last": "2026-11-13"
+   }
+  }
+ }
+}

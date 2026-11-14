@@ -1,0 +1,13 @@
+# credentials (Earthdata token, FIRMS key): never commit
+.env
+.env.*
+!.env.example
+
+# local environment and caches
+.venv/
+__pycache__/
+*.pyc
+
+# raw and intermediate data (rebuild with the pipeline; see README). docs/data/ is tracked: the page reads it.
+/data/
+/logs/

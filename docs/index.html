@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the camera cannot see: NISAR radar over the 2026 Central Kalimantan peat fires</title>
+<meta name="description" content="NISAR L-band radar shows the 2026 peat-fire burn scars in Pulang Pisau, Central Kalimantan, on days when optical satellites saw smoke and cloud.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+  <h1>What the camera cannot see</h1>
+  <p class="where">NISAR L-band radar over the 2026 peat fires in Pulang Pisau, Central Kalimantan, Indonesia</p>
+  <p class="placeholder" id="idea-statement">PLACEHOLDER (idea statement): Rabbani's own words go here.</p>
+</header>
+
+<main>
+  <section class="viewer-wrap" aria-label="Before and after radar viewer">
+    <div class="controls">
+      <fieldset>
+        <legend>Place</legend>
+        <div id="pick-window" class="seg"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Orbit</legend>
+        <div id="pick-track" class="seg"></div>
+      </fieldset>
+      <fieldset>
+        <legend>Radar channel</legend>
+        <div id="pick-pol" class="seg">
+          <button type="button" data-pol="hv">HV (cross-polarized)</button>
+          <button type="button" data-pol="hh">HH (co-polarized)</button>
+        </div>
+      </fieldset>
+      <fieldset>
+        <legend>Dates</legend>
+        <label>Before <select id="date-a"></select></label>
+        <label>After <select id="date-b"></select></label>
+        <button type="button" id="prev-b" aria-label="Earlier after date">Earlier</button>
+        <button type="button" id="next-b" aria-label="Later after date">Later</button>
+      </fieldset>
+      <fieldset>
+        <legend>Jump to</legend>
+        <button type="button" id="preset-fire">Fire season</button>
+        <button type="button" id="preset-placebo">Placebo: two passes before the fires</button>
+      </fieldset>
+    </div>
+
+    <div class="viewer" id="viewer">
+      <img id="img-a" alt="Radar image, before date">
+      <div class="after" id="after">
+        <img id="img-b" alt="Radar image, after date">
+        <canvas id="overlay" width="1110" height="1110"></canvas>
+      </div>
+      <div class="divider" id="divider"></div>
+      <span class="tag tag-a" id="tag-a"></span>
+      <span class="tag tag-b" id="tag-b"></span>
+      <input type="range" id="slide" min="0" max="100" value="50" step="0.1" aria-label="Move the divider between the before and after images">
+    </div>
+    <p class="scale" id="scale-note"></p>
+
+    <div class="layers">
+      <label><input type="checkbox" id="layer-change" checked> <span class="sw sw-drop"></span> Radar change between the two dates (red: echo got weaker, blue: stronger)</label>
+      <label><input type="checkbox" id="layer-rule"> <span class="sw sw-rule"></span> The rule: cells where the echo fell by 1 dB or more</label>
+      <label><input type="checkbox" id="layer-hot"> <span class="sw sw-hot"></span> Fire hotspots detected between the two dates (VIIRS, <span id="hot-count">0</span> shown)</label>
+      <label><input type="checkbox" id="layer-opt"> <span class="sw sw-burn"></span> Optical burn map (orange: burned, dark red: severe, grey: no clear view at all)</label>
+    </div>
+    <p class="note">Layers are drawn on the after side only. Drag the divider to compare.</p>
+  </section>
+
+  <section class="panel" aria-label="Scores">
+    <h2>Check it against the optical burn map</h2>
+    <p id="live" class="live"></p>
+    <h3>Every pair on this orbit</h3>
+    <p class="note">Placebo pairs are two passes before the fire season, scored against the same burn map. A real signal should show nothing there: an AUC near 0.50 and almost no flagged cells.</p>
+    <div class="tablewrap">
+      <table id="pairs">
+        <thead>
+          <tr><th>Kind</th><th>Before</th><th>After</th><th>HV AUC</th><th>HH AUC</th><th>HV rule: right when it fires</th><th>HV rule: false alarms</th><th>HV rule: burned cells caught</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <p class="note" id="label-note"></p>
+  </section>
+
+  <section class="text">
+    <h2>What the layers are</h2>
+    <dl>
+      <dt>HV and HH</dt>
+      <dd>The radar sends a horizontally polarized pulse. HH is the part of the echo that comes back horizontal, HV the part that comes back vertical. Leaves and branches turn the wave, so standing vegetation is bright in HV. When it burns, the HV echo drops. Over peat swamp HH changes too, but in these windows it does not follow the burn. A likely reason, not tested here, is that HH mostly follows how wet the ground is.</dd>
+      <dt>Radar change</dt>
+      <dd>The after image minus the before image, in decibels, averaged to about 100 m for display. The scores use cells of about 200 m.</dd>
+      <dt>Fire hotspots</dt>
+      <dd>Centres of VIIRS 375 m active-fire detections from NASA FIRMS. A hotspot is a detection of heat at overpass time, not a map of burned ground.</dd>
+      <dt>Optical burn map</dt>
+      <dd>Change in the Normalized Burn Ratio between July 2026 and the few usable passes from 4 October to 5 November 2026, from Harmonized Landsat and Sentinel-2 (HLS). The after side is read through smoke, and where no clear pixel exists the map is grey and nothing is scored.</dd>
+    </dl>
+  </section>
+
+  <section class="text">
+    <h2>Limits</h2>
+    <ul id="limits">
+      <li>Two windows of about 22 km, two orbits, one fire season. This is not a burned-area product.</li>
+      <li>The optical map used as truth is itself read through smoke. Thick smoke lowers near-infrared reflectance, so some of the optical burn may be haze.</li>
+      <li>Large parts of both windows have no clear optical pixel in the after period and are not scored.</li>
+      <li>The 1 dB rule finds the strongly changed core of the burn, not all of it. It was fixed before scoring and has not been tuned or cross-validated.</li>
+      <li>In window 2 the placebo pairs are not flat, and the burned sample is small.</li>
+      <li>The radar products are mostly provisional releases. The display images use a 3 by 3 mean filter; the scores use no speckle filter beyond averaging to 200 m.</li>
+    </ul>
+  </section>
+</main>
+
+<footer>
+  <h2>Data, code and credits</h2>
+  <p>Radar: NISAR L2 GCOV (NASA and ISRO), read from the Alaska Satellite Facility DAAC. Fire detections: NASA FIRMS, VIIRS 375 m. Optical: NASA Harmonized Landsat and Sentinel-2 (HLS) v2.0. Full list with links: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see/blob/main/REFERENCES.md">REFERENCES.md</a>.</p>
+  <p>Code and method: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see">github.com/rabbaniputrowi-alt/what-the-camera-cannot-see</a>, MIT licence. Built for the NASA Space Apps Challenge 2026, challenge "Dancing with the SARs", Jakarta local event. This project is not endorsed by NASA.</p>
+  <p class="placeholder" id="ai-statement">PLACEHOLDER (AI statement): Rabbani's statement on how AI tools were used goes here.</p>
+</footer>
+
+<script src="score.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
