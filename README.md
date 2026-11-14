@@ -41,9 +41,12 @@ HH shows no comparable signal: its fire-season AUC stays in the range of its own
   because the flag covers the whole window on the fire-season passes). Some optical burn may be haze.
 - Large parts of both windows have no clear optical pixel after the fires and are not scored.
 - The 1 dB rule finds the strongly changed core of the burn, not all of it. It is not tuned or cross-validated.
-- In window 2 the placebo is not flat and the burned sample is small.
+- In window 2 the placebo test fails on some pairs: before the fires, cells that later burned were already
+  losing HV (AUC up to 0.77), and the burned sample is small. Window 1 is the clean case.
 - Most radar scenes are provisional releases. Scores use no speckle filter beyond averaging to 200 m.
 - Radar change is not fire by itself: water level, rain and land clearing change the echo too.
+- The camera did see the ground on some days: in August and early September, and on 4 October through smoke
+  plumes. The optical images on the page are surface reflectance, already corrected for the atmosphere.
 
 ## Rebuild it
 

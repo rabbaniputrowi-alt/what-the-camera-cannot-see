@@ -13,7 +13,8 @@
   const pct = (v, dp) => (v === null ? "n/a" : (v * 100).toFixed(dp === undefined ? 0 : dp) + "%");
   const auc2 = (v) => (v === null ? "n/a" : v.toFixed(2));
 
-  const state = { w: Object.keys(meta.windows)[0], tr: null, pol: "hv", a: null, b: null, seq: 0 };
+  const state = { w: Object.keys(meta.windows)[0], tr: null, pol: "hv", a: null, b: null, seq: 0, mode: "camera" };
+  const BLANK = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
   const cache = { cells: {}, labels: {}, hot: {}, opt: {}, gray: new Map() };
   let cells = null, labels = null, hot = null, optImg = null, changeCanvas = null, ch = null;
 
@@ -52,8 +53,10 @@
     return out;
   }
 
-  function buildChange() {
-    const ga = grey(imgA, src(state.a)), gb = grey(imgB, src(state.b));
+  async function buildChange(seq) {
+    const [ia, ib] = await Promise.all([image(src(state.a)), image(src(state.b))]);
+    if (seq !== state.seq) return false;             // a newer selection replaced this one
+    const ga = grey(ia, src(state.a)), gb = grey(ib, src(state.b));
     const [lo, hi] = meta.stretch_db[state.pol], k = (hi - lo) / 255;
     const c = document.createElement("canvas"); c.width = BN; c.height = BN;
     const g = c.getContext("2d"), im = g.createImageData(BN, BN), d = im.data;
@@ -65,6 +68,7 @@
     }
     g.putImageData(im, 0, 0);
     changeCanvas = c;
+    return true;
   }
 
   /* ---------- drawing ---------- */
@@ -110,6 +114,46 @@
     $("live").innerHTML = `${lead}${P}, ${fmt(state.a)} to ${fmt(state.b)}: AUC <b>${auc2(s.auc)}</b> ` +
       `(the chance that a burned cell lost more echo than an unburned one; 0.50 means no signal). ` +
       `The rule "${P} fell by 1 dB or more" flags ${num(s.flagged)} of ${num(N * N)} cells. ${rule}`;
+  }
+
+  /* Time series: median change since the baseline for burned and unburned cells, with hotspot counts per interval. */
+  function series() {
+    const t = trk(), d = t.dates, j = state.pol === "hv" ? 0 : 1, P = state.pol.toUpperCase();
+    const W = 760, H = 264, L = 48, R = 14, T = 12, B = 46;
+    const day = (s) => Date.parse(s + "T00:00:00Z") / 864e5, x0 = day(d[0]), x1 = day(d[d.length - 1]);
+    const X = (s) => L + (day(s) - x0) / (x1 - x0) * (W - L - R);
+    const pts = d.map((x) => {
+      if (x === t.baseline) return [0, 0];
+      const s = scoreFor(t.baseline, x, j);
+      return [s.medianBurned, s.medianUnburned];
+    });
+    const lo = Math.floor(Math.min(-0.5, ...pts.flat()) * 2) / 2, hi = Math.ceil(Math.max(0.5, ...pts.flat()) * 2) / 2;
+    const Y = (v) => T + (hi - v) / (hi - lo) * (H - T - B);
+    const counts = d.map((x, i) => (i ? hot.filter((p) => p[2] > d[i - 1] && p[2] <= x).length : 0));
+    const top = Math.max(1, ...counts), barH = (H - T - B) * 0.45;
+    const short = (s) => { const p = s.split("-"); return `${+p[2]} ${MONTHS[+p[1] - 1]}`; };
+    let g = "";
+    for (let v = lo; v <= hi + 1e-9; v += 0.5) {
+      g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v === 0 ? "#888" : "#e2e2e2"}"/>` +
+        `<text x="${L - 6}" y="${Y(v) + 4}" text-anchor="end">${v > 0 ? "+" : ""}${v.toFixed(1)}</text>`;
+    }
+    d.forEach((x, i) => {
+      if (i && counts[i]) {
+        const h = counts[i] / top * barH;
+        g += `<rect x="${X(d[i - 1]) + 1}" y="${H - B - h}" width="${X(x) - X(d[i - 1]) - 2}" height="${h}" fill="#f2d200" opacity="0.55"/>` +
+          `<text x="${(X(x) + X(d[i - 1])) / 2}" y="${H - B - 4}" text-anchor="middle" fill="#5a4e00">${num(counts[i])}</text>`;
+      }
+      g += `<text x="${X(x)}" y="${H - B + 18}" text-anchor="middle">${short(x)}</text>`;
+    });
+    for (const [x, name] of [[state.a, "before"], [state.b, "after"]]) {
+      g += `<line x1="${X(x)}" x2="${X(x)}" y1="${T}" y2="${H - B}" stroke="#111" stroke-dasharray="4 3"/>` +
+        `<text x="${X(x)}" y="${H - B + 34}" text-anchor="middle" font-weight="600">${name}</text>`;
+    }
+    const line = (k, colour) => `<polyline fill="none" stroke="${colour}" stroke-width="2" points="${d.map((x, i) => `${X(x)},${Y(pts[i][k])}`).join(" ")}"/>` +
+      d.map((x, i) => `<circle cx="${X(x)}" cy="${Y(pts[i][k])}" r="3.2" fill="${colour}"/>`).join("");
+    g += line(1, "#111") + line(0, "#c81e1e");
+    $("series").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${P} change since the baseline pass for burned and unburned cells, by date">${g}</svg>`;
+    $("series-title").textContent = `${P} over the season: median change in dB since ${fmt(t.baseline)}`;
   }
 
   function pairList() {
@@ -172,6 +216,8 @@
       state.tr = t; await enter(true);
     });
     for (const b of $("pick-pol").children) b.setAttribute("aria-pressed", String(b.dataset.pol === state.pol));
+    $("mode-box").hidden = !win().camera;
+    for (const b of $("pick-mode").children) b.setAttribute("aria-pressed", String(b.dataset.mode === state.mode));
   }
 
   /* Enter a window and track. Keeps the dates when they exist on the new track, else resets to the fire pair. */
@@ -183,19 +229,30 @@
   }
 
   async function render() {
-    const seq = ++state.seq;
-    $("tag-a").textContent = `Before: ${fmt(state.a)}`;
-    $("tag-b").textContent = `After: ${fmt(state.b)}`;
-    imgA.alt = `${state.pol.toUpperCase()} radar image, ${fmt(state.a)}`;
-    imgB.alt = `${state.pol.toUpperCase()} radar image, ${fmt(state.b)}`;
+    const seq = ++state.seq, P = state.pol.toUpperCase();
+    const camMode = state.mode === "camera" && !!win().camera, cam = camMode ? win().camera[state.b] : null;
+    $("tag-a").textContent = camMode ? (cam ? `Camera (${cam.sensor}): ${fmt(cam.hls_date)}` : "Camera: no pass") : `Before: ${fmt(state.a)}`;
+    $("tag-b").textContent = camMode ? `Radar (${P}): ${fmt(state.b)}` : `After: ${fmt(state.b)}`;
+    imgA.alt = camMode ? (cam ? `True-colour ${cam.sensor} image, ${fmt(cam.hls_date)}` : "No optical image") : `${P} radar image, ${fmt(state.a)}`;
+    imgB.alt = `${P} radar image, ${fmt(state.b)}`;
+    $("nocam").hidden = !camMode || !!cam;
+    $("cam-note").hidden = !camMode;
+    if (camMode) {
+      const n = cam ? cam.days_apart : 0;
+      const when = n === 0 ? "the same day as the radar pass" : `${Math.abs(n)} day${Math.abs(n) > 1 ? "s" : ""} ${n < 0 ? "before" : "after"} the radar pass`;
+      $("cam-note").textContent = (cam
+        ? `Left: what the optical satellite recorded on ${fmt(cam.hls_date)} (${cam.sensor}, ${when}), unmasked. ` +
+          `Its own quality mask calls ${pct(cam.cloud)} of the window cloud (thick smoke is often classed as cloud). `
+        : "") + `Right: the radar pass of ${fmt(state.b)}, with the change since ${fmt(state.a)}.`;
+    }
     const d = trk().dates;
     ch = Score.change(cells, N, d.indexOf(state.a), d.indexOf(state.b), state.pol === "hv" ? 0 : 1, meta.cell_nodata);
-    live(); table(); syncDates();
+    live(); series(); table(); syncDates();
     changeCanvas = null; draw();
-    imgA.src = src(state.a); imgB.src = src(state.b);
-    try { await Promise.all([imgA.decode(), imgB.decode()]); } catch (e) { return; }
-    if (seq !== state.seq) return;                   // a newer selection replaced this one
-    buildChange(); draw();
+    imgA.src = camMode ? (cam ? D + cam.file : BLANK) : src(state.a);
+    imgB.src = src(state.b);
+    try { if (!(await buildChange(seq))) return; } catch (e) { return; }
+    draw();
     const later = d.filter((x) => x > state.a), i = later.indexOf(state.b);
     for (const x of [later[i - 1], later[i + 1]]) if (x) new Image().src = src(x);   // warm the neighbours
   }
@@ -209,6 +266,7 @@
   $("slide").addEventListener("input", slide);
   for (const id of ["layer-change", "layer-rule", "layer-hot", "layer-opt"]) $(id).addEventListener("change", draw);
   for (const b of $("pick-pol").children) b.addEventListener("click", () => { state.pol = b.dataset.pol; controls(); render(); });
+  for (const b of $("pick-mode").children) b.addEventListener("click", () => { state.mode = b.dataset.mode; controls(); render(); });
   $("date-a").addEventListener("change", (e) => { state.a = e.target.value; syncDates(); render(); });
   $("date-b").addEventListener("change", (e) => { state.b = e.target.value; render(); });
   function step(k) {

@@ -143,6 +143,11 @@ for w, wc in WINDOWS.items():
               separators=(",", ":"))
     wm["hotspots"] = {"file": f"hotspots_{w}.json", "count": len(pts),
                       "first": str(hot.acq_date.min()), "last": str(hot.acq_date.max())}
+
+    # the camera side: HLS true-colour image nearest each NISAR pass (made by hls_rgb.py), if present
+    cam = DATA / "hls" / f"camera_{w}.json"
+    if cam.exists():
+        wm["camera"] = json.load(open(cam))
     meta["windows"][w] = wm
     print(f"{w}: labels {wm['optical']['counts']}, clear {wm['optical']['clear_share']}, hotspots {len(pts)}", flush=True)
 

@@ -18,6 +18,13 @@
 <main>
   <section class="viewer-wrap" aria-label="Before and after radar viewer">
     <div class="controls">
+      <fieldset id="mode-box">
+        <legend>Compare</legend>
+        <div id="pick-mode" class="seg">
+          <button type="button" data-mode="camera">Camera and radar</button>
+          <button type="button" data-mode="radar">Radar before and after</button>
+        </div>
+      </fieldset>
       <fieldset>
         <legend>Place</legend>
         <div id="pick-window" class="seg"></div>
@@ -49,6 +56,7 @@
 
     <div class="viewer" id="viewer">
       <img id="img-a" alt="Radar image, before date">
+      <p class="nocam" id="nocam" hidden>No Landsat or Sentinel-2 pass within 3 days of this radar pass covers the window.</p>
       <div class="after" id="after">
         <img id="img-b" alt="Radar image, after date">
         <canvas id="overlay" width="1110" height="1110"></canvas>
@@ -59,6 +67,7 @@
       <input type="range" id="slide" min="0" max="100" value="50" step="0.1" aria-label="Move the divider between the before and after images">
     </div>
     <p class="scale" id="scale-note"></p>
+    <p class="camnote" id="cam-note" hidden></p>
 
     <div class="layers">
       <label><input type="checkbox" id="layer-change" checked> <span class="sw sw-drop"></span> Radar change between the two dates (red: echo got weaker, blue: stronger)</label>
@@ -72,6 +81,9 @@
   <section class="panel" aria-label="Scores">
     <h2>Check it against the optical burn map</h2>
     <p id="live" class="live"></p>
+    <h3 id="series-title"></h3>
+    <div id="series"></div>
+    <p class="note">Red line: cells the optical map calls burned. Black line: cells it calls unburned. Both are the median change since the baseline pass. Yellow bars: VIIRS detections inside the window since the previous pass. A burn should show as the red line leaving the black line after the fires arrive, not before. Dashed lines mark the two dates in the viewer.</p>
     <h3>Every pair on this orbit</h3>
     <p class="note">Placebo pairs are two passes before the fire season, scored against the same burn map. A real signal should show nothing there: an AUC near 0.50 and almost no flagged cells.</p>
     <div class="tablewrap">
@@ -106,7 +118,9 @@
       <li>The optical map used as truth is itself read through smoke. Thick smoke lowers near-infrared reflectance, so some of the optical burn may be haze.</li>
       <li>Large parts of both windows have no clear optical pixel in the after period and are not scored.</li>
       <li>The 1 dB rule finds the strongly changed core of the burn, not all of it. It was fixed before scoring and has not been tuned or cross-validated.</li>
-      <li>In window 2 the placebo pairs are not flat, and the burned sample is small.</li>
+      <li>In window 2 the placebo test fails on some pairs: before the fires, cells that later burned were already losing HV (AUC up to 0.77), and the burned sample is small. Window 1 is the clean case.</li>
+      <li>Radar change is not fire by itself. Water level, rain and land clearing change the echo too, and one such patch shows in window 1 between 4 and 16 July.</li>
+      <li>The camera did see the ground on some days: in August and early September, and on 4 October through smoke plumes. The optical images shown are surface reflectance, already corrected for the atmosphere, so thin haze looks clearer than it was.</li>
       <li>The radar products are mostly provisional releases. The display images use a 3 by 3 mean filter; the scores use no speckle filter beyond averaging to 200 m.</li>
     </ul>
   </section>
