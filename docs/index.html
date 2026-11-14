@@ -78,6 +78,14 @@
     <p class="note">Layers are drawn on the after side only. Drag the divider to compare.</p>
   </section>
 
+  <section class="panel" aria-label="Every satellite pass of the season" id="passes" hidden>
+    <h2>Every pass, camera and radar</h2>
+    <p id="pass-lead" class="live"></p>
+    <p class="note" id="pass-rule"></p>
+    <div id="pass-periods"></div>
+    <p class="note" id="pass-note"></p>
+  </section>
+
   <section class="panel" aria-label="Scores">
     <h2>Check it against the optical burn map</h2>
     <p id="live" class="live"></p>
@@ -120,7 +128,7 @@
       <li>The 1 dB rule finds the strongly changed core of the burn, not all of it. It was fixed before scoring and has not been tuned or cross-validated.</li>
       <li>In window 2 the placebo test fails on some pairs: before the fires, cells that later burned were already losing HV (AUC up to 0.77), and the burned sample is small. Window 1 is the clean case.</li>
       <li>Radar change is not fire by itself. Water level, rain and land clearing change the echo too, and one such patch shows in window 1 between 4 and 16 July.</li>
-      <li>The camera did see the ground on some days: in August and early September, and on 4 October through smoke plumes. The optical images shown are surface reflectance, already corrected for the atmosphere, so thin haze looks clearer than it was.</li>
+      <li>The camera did see the ground: on most passes in August and early September, and once per window at the peak of the fires. The start of the peak period (15 September) was chosen after looking at the images, which is why all three periods are shown. The optical images are surface reflectance, already corrected for the atmosphere, so thin haze looks clearer than it was.</li>
       <li>The radar products are mostly provisional releases. The display images use a 3 by 3 mean filter; the scores use no speckle filter beyond averaging to 200 m.</li>
     </ul>
   </section>

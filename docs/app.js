@@ -15,7 +15,7 @@
 
   const state = { w: Object.keys(meta.windows)[0], tr: null, pol: "hv", a: null, b: null, seq: 0, mode: "camera" };
   const BLANK = "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-  const cache = { cells: {}, labels: {}, hot: {}, opt: {}, gray: new Map() };
+  const cache = { cells: {}, labels: {}, hot: {}, opt: {}, passes: {}, gray: new Map() };
   let cells = null, labels = null, hot = null, optImg = null, changeCanvas = null, ch = null;
 
   const imgA = $("img-a"), imgB = $("img-b"), overlay = $("overlay"), ctx = overlay.getContext("2d");
@@ -34,6 +34,7 @@
     if (!cache.labels[state.w]) cache.labels[state.w] = await bin(win().optical.labels, Uint8Array);
     if (!cache.hot[state.w]) cache.hot[state.w] = (await (await fetch(D + win().hotspots.file)).json()).points;
     if (!cache.opt[state.w]) cache.opt[state.w] = await image(D + win().optical.overlay);
+    if (win().passes && !cache.passes[state.w]) cache.passes[state.w] = (await (await fetch(D + win().passes.file)).json());
     cells = cache.cells[ck]; labels = cache.labels[state.w]; hot = cache.hot[state.w]; optImg = cache.opt[state.w];
   }
 
@@ -182,6 +183,75 @@
       `and ${num(+c[0])} cells have no clear optical view. Cells are about 200 m on a side.`;
   }
 
+  /* ---------- every pass of the season: optical thumbnails and radar thumbnails, counted per period ---------- */
+  const short = (s) => { const p = s.split("-"); return `${+p[2]} ${MONTHS[+p[1] - 1]}`; };
+  function passPanel() {
+    const info = win().passes, box = $("pass-periods");
+    $("passes").hidden = !info;
+    if (!info) return;
+    const all = cache.passes[state.w], rule = all.rule, peak = info.periods[info.periods.length - 1];
+    $("pass-lead").innerHTML = `${peak.label}, ${short(peak.from)} to ${fmt(peak.to)}: the optical satellites made <b>${peak.optical}</b> full passes over this window ` +
+      `and got <b>${peak.usable}</b> usable look${peak.usable === 1 ? "" : "s"}` +
+      `${peak.usable_dates.length && peak.usable <= 2 ? " (" + peak.usable_dates.map(short).join(", ") + ")" : ""}. ` +
+      `The radar passed <b>${peak.radar}</b> times and returned an image on <b>${peak.radar_ok}</b> of them.`;
+    $("pass-rule").textContent = `A usable look, by a rule fixed before counting: the pass covers at least ${pct(rule.min_coverage)} of the window ` +
+      `and the optical product's own cloud mask calls less than ${pct(rule.max_cloud)} of it cloud. Landsat 8, Landsat 9 and Sentinel-2, ` +
+      `every pass from ${fmt(all.period[0])} to ${fmt(all.period[1])}. Same-day Landsat and Sentinel-2 passes count separately. ` +
+      `Bold dates with a dark frame are usable looks. Faded images are passes that covered only part of the window; they are not counted. ` +
+      `Nothing is masked in these images.`;
+    box.textContent = "";
+    for (const per of info.periods) {
+      const div = document.createElement("div"); div.className = "period";
+      const h = document.createElement("h3"); h.textContent = `${per.label}: ${short(per.from)} to ${fmt(per.to)}`; div.appendChild(h);
+      const pc = document.createElement("p");
+      pc.textContent = `Camera: ${per.usable} usable look${per.usable === 1 ? "" : "s"} in ${per.optical} full passes.`; div.appendChild(pc);
+      const s1 = document.createElement("div"); s1.className = "strip";
+      for (const p of all.passes) {
+        if (p.date < per.from || p.date > per.to) continue;
+        const el = document.createElement(p.file ? "a" : "span");
+        el.className = "pass" + (p.usable ? " usable" : "") + (p.coverage < rule.min_coverage ? " partial" : "");
+        const cover = p.coverage < rule.min_coverage ? `, covers ${pct(p.coverage)} of the window` : "";
+        el.title = `${p.sensor}, ${fmt(p.date)}: ${p.cloud === undefined ? "no data over the window" : pct(p.cloud) + " cloud by its own mask"}${cover}`;
+        if (p.file) {
+          el.href = D + p.file; el.target = "_blank"; el.rel = "noopener";
+          const im = document.createElement("img"); im.loading = "lazy"; im.alt = el.title; im.src = D + p.file; im.width = 74; im.height = 74;
+          el.appendChild(im);
+        }
+        el.appendChild(document.createTextNode(short(p.date)));
+        s1.appendChild(el);
+      }
+      div.appendChild(s1);
+      const pr = document.createElement("p");
+      pr.textContent = `Radar: ${per.radar_ok} image${per.radar_ok === 1 ? "" : "s"} in ${per.radar} passes. Select one to put it in the viewer.`; div.appendChild(pr);
+      const s2 = document.createElement("div"); s2.className = "strip";
+      for (const r of info.radar) {
+        if (r.date < per.from || r.date > per.to) continue;
+        const b = document.createElement("button");
+        b.type = "button"; b.className = "pass usable"; b.dataset.date = r.date; b.dataset.track = r.track;
+        b.title = `NISAR HV, ${fmt(r.date)}, track ${r.track}`;
+        const im = document.createElement("img"); im.alt = b.title; im.src = D + r.file; im.width = 74; im.height = 74;
+        b.appendChild(im); b.appendChild(document.createTextNode(short(r.date)));
+        b.addEventListener("click", async () => {
+          const t = win().tracks[r.track];
+          state.tr = r.track; state.b = r.date;
+          if (!t.dates.includes(state.a) || state.a >= r.date) state.a = r.date > t.baseline ? t.baseline : t.dates[0];
+          if (state.a >= state.b) state.b = t.dates[1];
+          await loadData(); controls(); syncDates(); render();
+          $("viewer").scrollIntoView({ behavior: "smooth", block: "center" });
+        });
+        s2.appendChild(b);
+      }
+      div.appendChild(s2);
+      box.appendChild(div);
+    }
+    $("pass-note").textContent = info.note;
+    markPass();
+  }
+  function markPass() {
+    for (const b of document.querySelectorAll("#pass-periods button.pass"))
+      b.setAttribute("aria-pressed", String(b.dataset.date === state.b && b.dataset.track === state.tr));
+  }
+
   /* ---------- controls ---------- */
   function seg(el, items, current, onPick) {
     el.textContent = "";
@@ -225,7 +295,7 @@
     await loadData();
     const d = trk().dates;
     if (resetDates || !d.includes(state.a) || !d.includes(state.b)) [state.a, state.b] = firePair();
-    controls(); syncDates(); render();
+    controls(); syncDates(); passPanel(); render();
   }
 
   async function render() {
@@ -247,7 +317,7 @@
     }
     const d = trk().dates;
     ch = Score.change(cells, N, d.indexOf(state.a), d.indexOf(state.b), state.pol === "hv" ? 0 : 1, meta.cell_nodata);
-    live(); series(); table(); syncDates();
+    live(); series(); table(); syncDates(); markPass();
     changeCanvas = null; draw();
     imgA.src = camMode ? (cam ? D + cam.file : BLANK) : src(state.a);
     imgB.src = src(state.b);

@@ -21,7 +21,7 @@ from rasterio.warp import reproject, Resampling
 from scipy.ndimage import uniform_filter
 from config import (DATA, SITE_DATA, WINDOWS, TRACKS, BASELINE, PRE_SEASON_END, DISPLAY_PX, CELL_PX,
                     HV_STRETCH_DB, HH_STRETCH_DB, SPECKLE_BOX, DNBR_BURNED, DNBR_SEVERE, DNBR_UNBURNED,
-                    HV_RULE_DB, win_path, dates_on_disk)
+                    HV_RULE_DB, PERIODS, THUMB_PX, USABLE_COVER, ROOT, win_path, dates_on_disk)
 
 ap = argparse.ArgumentParser()
 ap.add_argument("--force", action="store_true", help="re-render images that already exist")
@@ -32,6 +32,10 @@ LABELS = {0: "no clear optical view", 1: "unburned (dNBR below 0.10)", 2: "in be
 NCELL = DISPLAY_PX // CELL_PX
 IMG = SITE_DATA / "img"
 IMG.mkdir(parents=True, exist_ok=True)
+PASSES = SITE_DATA / "passes"
+PASSES.mkdir(parents=True, exist_ok=True)
+MONTHS = "Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec".split()
+day = lambda d: f"{int(d[8:])} {MONTHS[int(d[5:7]) - 1]}"
 
 
 def display_tf(bbox):
@@ -106,6 +110,9 @@ for w, wc in WINDOWS.items():
                 if a.force or not out.exists():
                     with np.errstate(all="ignore"):
                         save_grey(10 * np.log10(boxcar(disp, SPECKLE_BOX)), stretch, out)
+                thumb = PASSES / f"{w}_t{tr}_{d}_hv.webp"
+                if pol == "hv" and (a.force or not thumb.exists()):
+                    Image.open(out).resize((THUMB_PX, THUMB_PX), Image.LANCZOS).save(thumb, "WEBP", quality=75, method=5)
             print(f"{w} t{tr} {d}", flush=True)
         stack.astype("<i2").tofile(SITE_DATA / f"cells_{w}_t{tr}.bin")
         pre = [d for d in dates if d <= PRE_SEASON_END]
@@ -148,8 +155,44 @@ for w, wc in WINDOWS.items():
     cam = DATA / "hls" / f"camera_{w}.json"
     if cam.exists():
         wm["camera"] = json.load(open(cam))
+    # every optical pass of the season (made by hls_passes.py), counted per period next to the radar passes
+    pj = SITE_DATA / f"passes_{w}.json"
+    if pj.exists():
+        P = json.load(open(pj))["passes"]
+        radar = sorted((d, tr) for tr, t in wm["tracks"].items() for d in t["dates"])
+        listed = sorted({(s["startTime"][:10], str(s["pathNumber"])) for s in json.load(open(DATA / "gcov_scenes.json"))})
+        per = []
+        for lo, hi, name in PERIODS:
+            q = [p for p in P if lo <= p["date"] <= hi]
+            full = [p for p in q if p["coverage"] >= USABLE_COVER]      # only full passes are counted
+            per.append({"from": lo, "to": hi, "label": name, "optical": len(full), "partial": len(q) - len(full),
+                        "usable": sum(bool(p.get("usable")) for p in q),
+                        "usable_dates": [p["date"] for p in q if p.get("usable")],
+                        "radar": sum(lo <= d <= hi for d, _ in listed),          # NISAR scenes in the archive
+                        "radar_ok": sum(lo <= d <= hi for d, _ in radar)})       # of which read into this window
+        wm["passes"] = {"file": f"passes_{w}.json", "periods": per, "note": wc.get("pass_note", ""),
+                        "radar": [{"date": d, "track": tr, "file": f"passes/{w}_t{tr}_{d}_hv.webp"} for d, tr in radar]}
     meta["windows"][w] = wm
     print(f"{w}: labels {wm['optical']['counts']}, clear {wm['optical']['clear_share']}, hotspots {len(pts)}", flush=True)
 
 json.dump(meta, open(SITE_DATA / "meta.json", "w"), indent=1)
+
+# README table of the pass count, between its markers
+rows = ["| Period | Window 1: usable looks in full optical passes | Window 2: usable looks in full optical passes | NISAR passes with data |", "|---|---|---|---|"]
+ws = [meta["windows"][w].get("passes") for w in WINDOWS]
+if all(ws):
+    for i, (lo, hi, name) in enumerate(PERIODS):
+        cell = lambda p: (f"{p['usable']} of {p['optical']}" +
+                          (f" ({', '.join(day(d) for d in p['usable_dates'])})" if 0 < p["usable"] <= 2 else ""))
+        r = ws[0]["periods"][i]
+        rows.append(f"| {name}, {day(lo)} to {day(hi)} | {cell(ws[0]['periods'][i])} | {cell(ws[1]['periods'][i])} | "
+                    f"{min(r['radar_ok'], ws[1]['periods'][i]['radar_ok'])} of {r['radar']} |")
+    readme = (ROOT / "README.md").read_text(encoding="utf-8")
+    if "<!-- passes:start" in readme:
+        head, rest = readme.split("<!-- passes:start", 1)
+        marker, tail = rest.split("-->", 1)[0], rest.split("<!-- passes:end -->", 1)[1]
+        NL = chr(10)
+        (ROOT / "README.md").write_text(head + "<!-- passes:start" + marker + "-->" + NL + NL.join(rows) + NL +
+                                        "<!-- passes:end -->" + tail, encoding="utf-8", newline=NL)
+    print(*rows, sep=chr(10))
 print("wrote", SITE_DATA / "meta.json")

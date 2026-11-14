@@ -34,6 +34,26 @@ more" was fixed before scoring. Full numbers for every pair: `docs/data/scores.j
 
 HH shows no comparable signal: its fire-season AUC stays in the range of its own placebo pairs.
 
+## What the camera saw
+
+Every Landsat 8, Landsat 9 and Sentinel-2 pass over each window from 10 June to 13 November 2026 (HLS v2.0),
+counted with a rule fixed before counting: a pass is a usable look when it covers at least 90% of the window
+and HLS's own cloud mask (Fmask) calls less than half of the covered part cloud. Passes that cover less than
+90% of a window (four over window 1, five over window 2) are left out of the count. Same-day Landsat and
+Sentinel-2 passes count separately. NISAR passes are the scenes in the ASF archive over the same windows.
+
+<!-- passes:start (written by pipeline/build_site.py, do not edit by hand) -->
+| Period | Window 1: usable looks in full optical passes | Window 2: usable looks in full optical passes | NISAR passes with data |
+|---|---|---|---|
+| Before the fires, 10 Jun to 31 Jul | 11 of 17 | 18 of 26 | 7 of 7 |
+| First fires, 1 Aug to 14 Sep | 13 of 16 | 18 of 25 | 6 of 6 |
+| Peak of the fires, 15 Sep to 1 Nov | 1 of 11 (4 Oct) | 1 of 15 (29 Oct) | 7 of 7 |
+<!-- passes:end -->
+
+The mask is strict: looking at every image, two more peak passes per window show part of the ground through
+thin smoke or between clouds. The start of the peak period (15 September) was chosen after looking at the
+images, which is why all three periods are listed. Every image is on the page.
+
 ## Limits
 
 - Two windows of about 22 km, two orbits, one fire season. This is not a burned-area product.
@@ -45,8 +65,9 @@ HH shows no comparable signal: its fire-season AUC stays in the range of its own
   losing HV (AUC up to 0.77), and the burned sample is small. Window 1 is the clean case.
 - Most radar scenes are provisional releases. Scores use no speckle filter beyond averaging to 200 m.
 - Radar change is not fire by itself: water level, rain and land clearing change the echo too.
-- The camera did see the ground on some days: in August and early September, and on 4 October through smoke
-  plumes. The optical images on the page are surface reflectance, already corrected for the atmosphere.
+- The camera did see the ground: on most passes in August and early September, and once per window at the peak
+  of the fires. The optical images on the page are surface reflectance, already corrected for the atmosphere,
+  so thin haze looks clearer than it was.
 
 ## Rebuild it
 

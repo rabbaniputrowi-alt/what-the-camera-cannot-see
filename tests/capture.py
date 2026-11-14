@@ -41,6 +41,12 @@ with sync_playwright() as p:
 
     s = shot("01_default", full=True)
     print("  table:"); [print("    " + r) for r in s["rows"]]
+    print("\n[passes] " + page.inner_text("#pass-lead"))
+    print("  periods: " + " | ".join(page.locator("#pass-periods .period p").all_inner_texts()))
+    print("  thumbnails:", page.locator("#pass-periods a.pass").count(), "optical,", page.locator("#pass-periods button.pass").count(), "radar")
+    page.locator("#passes").screenshot(path=str(out / "11_passes.png"))
+    page.locator("#pass-periods button.pass[data-date='2026-10-08']").click(); shot("12_pass_click")
+    page.click("#preset-fire")
     page.check("#layer-rule"); page.check("#layer-hot"); shot("02_rule_hotspots")
     page.uncheck("#layer-rule"); page.uncheck("#layer-hot"); page.uncheck("#layer-change"); page.check("#layer-opt"); shot("03_optical")
     page.uncheck("#layer-opt"); page.check("#layer-change")

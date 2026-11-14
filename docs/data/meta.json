@@ -1,5 +1,5 @@
 {
- "built": "2026-11-14 21:14",
+ "built": "2026-11-14 21:49",
  "display_px": 1110,
  "cell_px": 10,
  "ncell": 111,
@@ -326,6 +326,175 @@
      "cloud_or_high_aerosol": 1.0,
      "neither": 0.0
     }
+   },
+   "passes": {
+    "file": "passes_w1.json",
+    "periods": [
+     {
+      "from": "2026-06-10",
+      "to": "2026-07-31",
+      "label": "Before the fires",
+      "optical": 17,
+      "partial": 1,
+      "usable": 11,
+      "usable_dates": [
+       "2026-06-20",
+       "2026-06-22",
+       "2026-06-30",
+       "2026-07-08",
+       "2026-07-08",
+       "2026-07-10",
+       "2026-07-16",
+       "2026-07-18",
+       "2026-07-20",
+       "2026-07-23",
+       "2026-07-24"
+      ],
+      "radar": 7,
+      "radar_ok": 7
+     },
+     {
+      "from": "2026-08-01",
+      "to": "2026-09-14",
+      "label": "First fires",
+      "optical": 16,
+      "partial": 1,
+      "usable": 13,
+      "usable_dates": [
+       "2026-08-01",
+       "2026-08-02",
+       "2026-08-07",
+       "2026-08-12",
+       "2026-08-17",
+       "2026-08-17",
+       "2026-08-22",
+       "2026-08-25",
+       "2026-08-29",
+       "2026-09-01",
+       "2026-09-02",
+       "2026-09-10",
+       "2026-09-11"
+      ],
+      "radar": 6,
+      "radar_ok": 6
+     },
+     {
+      "from": "2026-09-15",
+      "to": "2026-11-01",
+      "label": "Peak of the fires",
+      "optical": 11,
+      "partial": 2,
+      "usable": 1,
+      "usable_dates": [
+       "2026-10-04"
+      ],
+      "radar": 7,
+      "radar_ok": 7
+     }
+    ],
+    "note": "The mask is strict. By eye, two more peak passes show part of the ground: 16 Sep through thin smoke and 31 Oct between clouds.",
+    "radar": [
+     {
+      "date": "2026-06-18",
+      "track": "61",
+      "file": "passes/w1_t61_2026-06-18_hv.webp"
+     },
+     {
+      "date": "2026-06-22",
+      "track": "125",
+      "file": "passes/w1_t125_2026-06-22_hv.webp"
+     },
+     {
+      "date": "2026-06-30",
+      "track": "61",
+      "file": "passes/w1_t61_2026-06-30_hv.webp"
+     },
+     {
+      "date": "2026-07-04",
+      "track": "125",
+      "file": "passes/w1_t125_2026-07-04_hv.webp"
+     },
+     {
+      "date": "2026-07-12",
+      "track": "61",
+      "file": "passes/w1_t61_2026-07-12_hv.webp"
+     },
+     {
+      "date": "2026-07-16",
+      "track": "125",
+      "file": "passes/w1_t125_2026-07-16_hv.webp"
+     },
+     {
+      "date": "2026-07-24",
+      "track": "61",
+      "file": "passes/w1_t61_2026-07-24_hv.webp"
+     },
+     {
+      "date": "2026-08-17",
+      "track": "61",
+      "file": "passes/w1_t61_2026-08-17_hv.webp"
+     },
+     {
+      "date": "2026-08-21",
+      "track": "125",
+      "file": "passes/w1_t125_2026-08-21_hv.webp"
+     },
+     {
+      "date": "2026-08-29",
+      "track": "61",
+      "file": "passes/w1_t61_2026-08-29_hv.webp"
+     },
+     {
+      "date": "2026-09-02",
+      "track": "125",
+      "file": "passes/w1_t125_2026-09-02_hv.webp"
+     },
+     {
+      "date": "2026-09-10",
+      "track": "61",
+      "file": "passes/w1_t61_2026-09-10_hv.webp"
+     },
+     {
+      "date": "2026-09-14",
+      "track": "125",
+      "file": "passes/w1_t125_2026-09-14_hv.webp"
+     },
+     {
+      "date": "2026-09-22",
+      "track": "61",
+      "file": "passes/w1_t61_2026-09-22_hv.webp"
+     },
+     {
+      "date": "2026-09-26",
+      "track": "125",
+      "file": "passes/w1_t125_2026-09-26_hv.webp"
+     },
+     {
+      "date": "2026-10-04",
+      "track": "61",
+      "file": "passes/w1_t61_2026-10-04_hv.webp"
+     },
+     {
+      "date": "2026-10-08",
+      "track": "125",
+      "file": "passes/w1_t125_2026-10-08_hv.webp"
+     },
+     {
+      "date": "2026-10-16",
+      "track": "61",
+      "file": "passes/w1_t61_2026-10-16_hv.webp"
+     },
+     {
+      "date": "2026-10-20",
+      "track": "125",
+      "file": "passes/w1_t125_2026-10-20_hv.webp"
+     },
+     {
+      "date": "2026-11-01",
+      "track": "125",
+      "file": "passes/w1_t125_2026-11-01_hv.webp"
+     }
+    ]
    }
   },
   "w2": {
@@ -631,6 +800,187 @@
      "cloud_or_high_aerosol": 1.0,
      "neither": 0.0
     }
+   },
+   "passes": {
+    "file": "passes_w2.json",
+    "periods": [
+     {
+      "from": "2026-06-10",
+      "to": "2026-07-31",
+      "label": "Before the fires",
+      "optical": 26,
+      "partial": 4,
+      "usable": 18,
+      "usable_dates": [
+       "2026-06-14",
+       "2026-06-18",
+       "2026-06-20",
+       "2026-06-21",
+       "2026-06-23",
+       "2026-06-26",
+       "2026-06-28",
+       "2026-06-30",
+       "2026-07-06",
+       "2026-07-08",
+       "2026-07-08",
+       "2026-07-11",
+       "2026-07-13",
+       "2026-07-16",
+       "2026-07-18",
+       "2026-07-21",
+       "2026-07-24",
+       "2026-07-31"
+      ],
+      "radar": 7,
+      "radar_ok": 7
+     },
+     {
+      "from": "2026-08-01",
+      "to": "2026-09-14",
+      "label": "First fires",
+      "optical": 25,
+      "partial": 1,
+      "usable": 18,
+      "usable_dates": [
+       "2026-08-01",
+       "2026-08-05",
+       "2026-08-07",
+       "2026-08-09",
+       "2026-08-10",
+       "2026-08-12",
+       "2026-08-15",
+       "2026-08-17",
+       "2026-08-17",
+       "2026-08-20",
+       "2026-08-22",
+       "2026-08-25",
+       "2026-08-25",
+       "2026-08-29",
+       "2026-09-01",
+       "2026-09-06",
+       "2026-09-09",
+       "2026-09-11"
+      ],
+      "radar": 6,
+      "radar_ok": 6
+     },
+     {
+      "from": "2026-09-15",
+      "to": "2026-11-01",
+      "label": "Peak of the fires",
+      "optical": 15,
+      "partial": 0,
+      "usable": 1,
+      "usable_dates": [
+       "2026-10-29"
+      ],
+      "radar": 7,
+      "radar_ok": 7
+     }
+    ],
+    "note": "The mask is strict. By eye, two more peak passes show part of the ground: 18 Sep between clouds and 19 Sep through smoke.",
+    "radar": [
+     {
+      "date": "2026-06-18",
+      "track": "61",
+      "file": "passes/w2_t61_2026-06-18_hv.webp"
+     },
+     {
+      "date": "2026-06-22",
+      "track": "125",
+      "file": "passes/w2_t125_2026-06-22_hv.webp"
+     },
+     {
+      "date": "2026-06-30",
+      "track": "61",
+      "file": "passes/w2_t61_2026-06-30_hv.webp"
+     },
+     {
+      "date": "2026-07-04",
+      "track": "125",
+      "file": "passes/w2_t125_2026-07-04_hv.webp"
+     },
+     {
+      "date": "2026-07-12",
+      "track": "61",
+      "file": "passes/w2_t61_2026-07-12_hv.webp"
+     },
+     {
+      "date": "2026-07-16",
+      "track": "125",
+      "file": "passes/w2_t125_2026-07-16_hv.webp"
+     },
+     {
+      "date": "2026-07-24",
+      "track": "61",
+      "file": "passes/w2_t61_2026-07-24_hv.webp"
+     },
+     {
+      "date": "2026-08-17",
+      "track": "61",
+      "file": "passes/w2_t61_2026-08-17_hv.webp"
+     },
+     {
+      "date": "2026-08-21",
+      "track": "125",
+      "file": "passes/w2_t125_2026-08-21_hv.webp"
+     },
+     {
+      "date": "2026-08-29",
+      "track": "61",
+      "file": "passes/w2_t61_2026-08-29_hv.webp"
+     },
+     {
+      "date": "2026-09-02",
+      "track": "125",
+      "file": "passes/w2_t125_2026-09-02_hv.webp"
+     },
+     {
+      "date": "2026-09-10",
+      "track": "61",
+      "file": "passes/w2_t61_2026-09-10_hv.webp"
+     },
+     {
+      "date": "2026-09-14",
+      "track": "125",
+      "file": "passes/w2_t125_2026-09-14_hv.webp"
+     },
+     {
+      "date": "2026-09-22",
+      "track": "61",
+      "file": "passes/w2_t61_2026-09-22_hv.webp"
+     },
+     {
+      "date": "2026-09-26",
+      "track": "125",
+      "file": "passes/w2_t125_2026-09-26_hv.webp"
+     },
+     {
+      "date": "2026-10-04",
+      "track": "61",
+      "file": "passes/w2_t61_2026-10-04_hv.webp"
+     },
+     {
+      "date": "2026-10-08",
+      "track": "125",
+      "file": "passes/w2_t125_2026-10-08_hv.webp"
+     },
+     {
+      "date": "2026-10-16",
+      "track": "61",
+      "file": "passes/w2_t61_2026-10-16_hv.webp"
+     },
+     {
+      "date": "2026-10-20",
+      "track": "125",
+      "file": "passes/w2_t125_2026-10-20_hv.webp"
+     },
+     {
+      "date": "2026-11-01",
+      "track": "125",
+      "file": "passes/w2_t125_2026-11-01_hv.webp"
+     }
+    ]
    }
   }
  }

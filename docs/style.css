@@ -58,3 +58,15 @@ dd { margin: 0; }
 ul { padding-left: 20px; }
 footer { margin-top: 30px; border-top: 1px solid var(--line); font-size: 14px; }
 footer p { max-width: 90ch; }
+
+.period { margin: 14px 0 18px; }
+.period h3 { margin-bottom: 2px; }
+.period p { margin: 8px 0 4px; }
+.strip { display: flex; flex-wrap: wrap; gap: 6px 4px; }
+.pass { width: 74px; margin: 0; padding: 0; border: 0; background: none; font-size: 11px; line-height: 1.25; color: var(--soft); text-align: left; text-decoration: none; cursor: pointer; }
+.pass img { display: block; width: 74px; height: 74px; background: #ddd; outline: 1px solid #999; }
+.pass.usable { color: var(--ink); font-weight: 700; }
+.pass.usable img { outline: 2px solid var(--ink); }
+.pass.partial img { opacity: .45; }
+.pass[aria-pressed="true"] { background: none; color: var(--ink); font-weight: 700; }
+.pass[aria-pressed="true"] img { outline: 3px solid #c81e1e; }
