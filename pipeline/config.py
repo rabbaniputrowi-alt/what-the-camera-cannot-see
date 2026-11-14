@@ -33,6 +33,11 @@ DNBR_UNBURNED = 0.10
 # The fixed rule, chosen before scoring: HV backscatter fell by 1 dB or more.
 HV_RULE_DB = -1.0
 
+# The fixed rule for counting a "usable look" by an optical satellite, chosen before counting:
+# the pass covers at least 90% of the window and HLS's own mask calls less than half of that cloud.
+USABLE_COVER = 0.90
+USABLE_CLOUD = 0.50
+
 # Display grid: every layer is resampled to the same lon/lat grid per window.
 DISPLAY_PX = 1110            # about 20 m per pixel
 CELL_PX = 10                 # scoring cells are 10 by 10 display pixels, about 200 m
