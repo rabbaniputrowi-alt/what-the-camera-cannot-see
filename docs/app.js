@@ -4,7 +4,13 @@
   "use strict";
   const $ = (id) => document.getElementById(id);
   const D = "data/";
-  const meta = await (await fetch(D + "meta.json")).json();
+  /* fetch that fails loudly: a missing file is an error, not an empty layer */
+  async function get(url) {
+    const r = await fetch(D + url);
+    if (!r.ok) throw new Error(url + " answered " + r.status);
+    return r;
+  }
+  const meta = await (await get("meta.json")).json();
   const N = meta.ncell, PX = meta.display_px, CELL = meta.cell_px;
   const BLOCK = 5, BN = PX / BLOCK;                  // display change layer: 5 px blocks, about 100 m
   const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
@@ -24,7 +30,7 @@
   const src = (d) => `${D}img/${state.w}_t${state.tr}_${d}_${state.pol}.webp`;
 
   /* ---------- loading ---------- */
-  async function bin(url, Type) { return new Type(await (await fetch(D + url)).arrayBuffer()); }
+  async function bin(url, Type) { return new Type(await (await get(url)).arrayBuffer()); }
   function image(url) {
     return new Promise((ok, fail) => { const i = new Image(); i.onload = () => ok(i); i.onerror = fail; i.src = url; });
   }
@@ -32,9 +38,9 @@
     const ck = state.w + "/" + state.tr;
     if (!cache.cells[ck]) cache.cells[ck] = await bin(trk().cells, Int16Array);
     if (!cache.labels[state.w]) cache.labels[state.w] = await bin(win().optical.labels, Uint8Array);
-    if (!cache.hot[state.w]) cache.hot[state.w] = (await (await fetch(D + win().hotspots.file)).json()).points;
+    if (!cache.hot[state.w]) cache.hot[state.w] = (await (await get(win().hotspots.file)).json()).points;
     if (!cache.opt[state.w]) cache.opt[state.w] = await image(D + win().optical.overlay);
-    if (win().passes && !cache.passes[state.w]) cache.passes[state.w] = (await (await fetch(D + win().passes.file)).json());
+    if (win().passes && !cache.passes[state.w]) cache.passes[state.w] = (await (await get(win().passes.file)).json());
     cells = cache.cells[ck]; labels = cache.labels[state.w]; hot = cache.hot[state.w]; optImg = cache.opt[state.w];
   }
 
@@ -113,7 +119,8 @@
     $("r-fa").textContent = pct(s.falseAlarm, 1);
     $("r-rec").textContent = pct(s.recall);
     $("live").textContent = `The rule "${P} fell by 1 dB or more" flags ${num(s.flagged)} of ${num(N * N)} cells` +
-      (fire ? `; ${num(s.flaggedBurned)} of the ${num(fire)} the optical map can judge are burned.` : `; none of them can be judged by the optical map.`);
+      (fire ? `; ${num(s.flaggedBurned)} of the ${num(fire)} the optical map can judge are burned.` : `; none of them can be judged by the optical map.`) +
+      (fire && s.nBurned + s.nUnburned ? ` A rule that flagged cells at random would be right ${pct(s.nBurned / (s.nBurned + s.nUnburned))} of the time here.` : "");
   }
 
   /* Time series: median change since the baseline for burned and unburned cells, with hotspot counts per interval. */
@@ -471,4 +478,11 @@
       if (t < 1) requestAnimationFrame(frame); else sweeping = false;
     })(t0);
   }
-})();
+})().catch((e) => {
+  /* a data file did not load: say so instead of leaving an empty page */
+  const p = document.createElement("p");
+  p.setAttribute("role", "alert");
+  p.style.cssText = "margin:0;padding:12px 16px;background:#7a1f1f;color:#fff;font-weight:600";
+  p.textContent = "The page could not load its data (" + (e && e.message ? e.message : e) + "). Reload to try again.";
+  document.body.prepend(p);
+});

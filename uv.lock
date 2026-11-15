@@ -930,6 +930,7 @@ dependencies = [
     { name = "requests" },
     { name = "scipy", version = "1.17.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version < '3.12'" },
     { name = "scipy", version = "1.18.1", source = { registry = "https://pypi.org/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "shapely" },
 ]
 
 [package.metadata]
@@ -946,6 +947,7 @@ requires-dist = [
     { name = "rasterio", specifier = ">=1.4" },
     { name = "requests", specifier = ">=2.34" },
     { name = "scipy", specifier = ">=1.17" },
+    { name = "shapely", specifier = ">=2.2" },
 ]
 
 [[package]]

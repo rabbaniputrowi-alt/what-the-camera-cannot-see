@@ -70,6 +70,17 @@ DNBR_UNBURNED = 0.10
 # The fixed rule, chosen before scoring: HV backscatter fell by 1 dB or more.
 HV_RULE_DB = -1.0
 
+# The README table shows one fire-season pair per track: the baseline against the last pass on or before
+# this date. The date has been in score.py since the first commit; the reason for it was not written down.
+# Every other pair is in docs/data/scores.json and on the page.
+HEADLINE_LAST = "2026-10-25"
+
+# Uncertainty of the AUC: 200 m cells next to each other are not independent, so the interval comes from
+# resampling whole blocks of cells (BOOT_BLOCK cells on a side, about 2 km) with replacement.
+BOOT_BLOCK = 10
+BOOT_REPS = 500
+BOOT_SEED = 2026
+
 # The fixed rule for counting a "usable look" by an optical satellite, chosen before counting:
 # the pass covers at least 90% of the window and HLS's own mask calls less than half of that cloud.
 USABLE_COVER = 0.90

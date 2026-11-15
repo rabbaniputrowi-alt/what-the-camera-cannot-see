@@ -1,7 +1,7 @@
 [project]
 name = "what-the-camera-cannot-see"
 version = "0.1.0"
-description = "NISAR L-band HV radar against optical satellites over the 2026 Central Kalimantan peat fires (NASA Space Apps 2026, Dancing with the SARs)"
+description = "NISAR L-band HV radar against optical satellites over the 2026 fire season in Kalimantan, Sumatra and South Papua (NASA Space Apps 2026, Dancing with the SARs)"
 license = "MIT"
 requires-python = ">=3.11,<3.13"
 dependencies = [
@@ -17,6 +17,7 @@ dependencies = [
     "rasterio>=1.4",
     "requests>=2.34",
     "scipy>=1.17",
+    "shapely>=2.2",
 ]
 
 [tool.uv]

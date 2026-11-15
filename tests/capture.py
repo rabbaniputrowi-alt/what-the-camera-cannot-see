@@ -76,3 +76,5 @@ with sync_playwright() as p:
     print("\nconsole errors:", errors or "none")
     print("failed requests:", failed or "none")
     b.close()
+if errors or failed:
+    sys.exit(1)
