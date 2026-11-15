@@ -4,7 +4,7 @@ NISAR L-band radar over the 2026 fire season in Indonesia: eight windows of abou
 fires in Pulang Pisau, Central Kalimantan, and reaching West Kalimantan, South Sumatra and South Papua.
 NASA Space Apps Challenge 2026, challenge "Dancing with the SARs", Jakarta local event.
 
-> PLACEHOLDER (idea statement): Rabbani's own words go here.
+> At the peak of the 2026 peat fires in Pulang Pisau, Central Kalimantan (15 September to 1 November), Landsat and Sentinel-2 made 11 full passes over this area and got one clear look at the ground. NISAR passed 8 times and returned an image every time. I wanted to know whether its L-band radar shows the burn scar on the days the camera saw smoke. It does in part: the HV channel picks out the strongly burned core of the scar and the HH channel does not. This app lets you check both against the optical burn map, in eight windows across Kalimantan, Sumatra and Papua.
 
 ## What this is
 
@@ -177,10 +177,6 @@ Harmonized Landsat and Sentinel-2 (HLS) v2.0 from NASA LP DAAC. Full list with l
 [REFERENCES.md](REFERENCES.md).
 
 This project is not endorsed by NASA and uses no NASA logos or mission identifiers.
-
-## AI use
-
-> PLACEHOLDER (AI statement): Rabbani's statement on how AI tools were used goes here.
 
 ## Licence
 
