@@ -178,6 +178,10 @@ Harmonized Landsat and Sentinel-2 (HLS) v2.0 from NASA LP DAAC. Full list with l
 
 This project is not endorsed by NASA and uses no NASA logos or mission identifiers.
 
+## AI use
+
+The code and drafts of the text were written with an AI assistant (Claude, Anthropic), directed and checked by Rabbani.
+
 ## Licence
 
 MIT, see [LICENSE](LICENSE).
