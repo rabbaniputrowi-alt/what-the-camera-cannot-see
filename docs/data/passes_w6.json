@@ -1,0 +1,778 @@
+{
+ "window": "w6",
+ "rule": {
+  "min_coverage": 0.9,
+  "max_cloud": 0.5
+ },
+ "period": [
+  "2026-06-10",
+  "2026-11-13"
+ ],
+ "passes": [
+  {
+   "date": "2026-06-10",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.658,
+   "cloud_shadow": 0.135,
+   "near_cloud": 0.135,
+   "high_aerosol": 0.896,
+   "not_cloud_or_shadow": 0.218,
+   "usable": false,
+   "file": "passes/w6_2026-06-10_S.webp"
+  },
+  {
+   "date": "2026-06-16",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.976,
+   "cloud": 0.581,
+   "cloud_shadow": 0.184,
+   "near_cloud": 0.175,
+   "high_aerosol": 0.709,
+   "not_cloud_or_shadow": 0.268,
+   "usable": false,
+   "file": "passes/w6_2026-06-16_L.webp"
+  },
+  {
+   "date": "2026-06-20",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.938,
+   "cloud_shadow": 0.09,
+   "near_cloud": 0.01,
+   "high_aerosol": 0.888,
+   "not_cloud_or_shadow": 0.005,
+   "usable": false,
+   "file": "passes/w6_2026-06-20_S.webp"
+  },
+  {
+   "date": "2026-06-22",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.999,
+   "cloud": 0.499,
+   "cloud_shadow": 0.2,
+   "near_cloud": 0.241,
+   "high_aerosol": 0.84,
+   "not_cloud_or_shadow": 0.322,
+   "usable": true,
+   "file": "passes/w6_2026-06-22_S.webp"
+  },
+  {
+   "date": "2026-06-24",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.991,
+   "cloud": 0.549,
+   "cloud_shadow": 0.204,
+   "near_cloud": 0.163,
+   "high_aerosol": 0.96,
+   "not_cloud_or_shadow": 0.267,
+   "usable": false,
+   "file": "passes/w6_2026-06-24_L.webp"
+  },
+  {
+   "date": "2026-06-30",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.407,
+   "cloud_shadow": 0.401,
+   "near_cloud": 0.218,
+   "high_aerosol": 0.784,
+   "not_cloud_or_shadow": 0.224,
+   "usable": true,
+   "file": "passes/w6_2026-06-30_S.webp"
+  },
+  {
+   "date": "2026-07-02",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.034,
+   "cloud_shadow": 0.026,
+   "near_cloud": 0.016,
+   "high_aerosol": 0.617,
+   "not_cloud_or_shadow": 0.942,
+   "usable": true,
+   "file": "passes/w6_2026-07-02_L.webp"
+  },
+  {
+   "date": "2026-07-05",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.585,
+   "cloud_shadow": 0.299,
+   "near_cloud": 0.148,
+   "high_aerosol": 0.824,
+   "not_cloud_or_shadow": 0.178,
+   "usable": false,
+   "file": "passes/w6_2026-07-05_S.webp"
+  },
+  {
+   "date": "2026-07-10",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.994,
+   "cloud": 0.062,
+   "cloud_shadow": 0.144,
+   "near_cloud": 0.232,
+   "high_aerosol": 0.261,
+   "not_cloud_or_shadow": 0.797,
+   "usable": true,
+   "file": "passes/w6_2026-07-10_L.webp"
+  },
+  {
+   "date": "2026-07-10",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.215,
+   "cloud_shadow": 0.335,
+   "near_cloud": 0.328,
+   "high_aerosol": 0.757,
+   "not_cloud_or_shadow": 0.469,
+   "usable": true,
+   "file": "passes/w6_2026-07-10_S.webp"
+  },
+  {
+   "date": "2026-07-12",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.999,
+   "cloud": 0.445,
+   "cloud_shadow": 0.374,
+   "near_cloud": 0.204,
+   "high_aerosol": 0.823,
+   "not_cloud_or_shadow": 0.219,
+   "usable": true,
+   "file": "passes/w6_2026-07-12_S.webp"
+  },
+  {
+   "date": "2026-07-15",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.332,
+   "cloud_shadow": 0.334,
+   "near_cloud": 0.239,
+   "high_aerosol": 0.693,
+   "not_cloud_or_shadow": 0.361,
+   "usable": true,
+   "file": "passes/w6_2026-07-15_S.webp"
+  },
+  {
+   "date": "2026-07-18",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.987,
+   "cloud": 0.286,
+   "cloud_shadow": 0.366,
+   "near_cloud": 0.273,
+   "high_aerosol": 0.846,
+   "not_cloud_or_shadow": 0.374,
+   "usable": true,
+   "file": "passes/w6_2026-07-18_L.webp"
+  },
+  {
+   "date": "2026-07-20",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.365,
+   "cloud_shadow": 0.28,
+   "near_cloud": 0.206,
+   "high_aerosol": 0.92,
+   "not_cloud_or_shadow": 0.379,
+   "usable": true,
+   "file": "passes/w6_2026-07-20_S.webp"
+  },
+  {
+   "date": "2026-07-25",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.659,
+   "cloud_shadow": 0.243,
+   "near_cloud": 0.11,
+   "high_aerosol": 0.87,
+   "not_cloud_or_shadow": 0.136,
+   "usable": false,
+   "file": "passes/w6_2026-07-25_S.webp"
+  },
+  {
+   "date": "2026-07-26",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.663,
+   "cloud_shadow": 0.26,
+   "near_cloud": 0.101,
+   "high_aerosol": 0.956,
+   "not_cloud_or_shadow": 0.12,
+   "usable": false,
+   "file": "passes/w6_2026-07-26_L.webp"
+  },
+  {
+   "date": "2026-07-30",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.962,
+   "cloud_shadow": 0.052,
+   "near_cloud": 0.007,
+   "high_aerosol": 0.866,
+   "not_cloud_or_shadow": 0.005,
+   "usable": false,
+   "file": "passes/w6_2026-07-30_S.webp"
+  },
+  {
+   "date": "2026-08-01",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.999,
+   "cloud": 0.483,
+   "cloud_shadow": 0.295,
+   "near_cloud": 0.154,
+   "high_aerosol": 0.852,
+   "not_cloud_or_shadow": 0.252,
+   "usable": true,
+   "file": "passes/w6_2026-08-01_S.webp"
+  },
+  {
+   "date": "2026-08-03",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.998,
+   "cloud": 0.019,
+   "cloud_shadow": 0.049,
+   "near_cloud": 0.093,
+   "high_aerosol": 0.067,
+   "not_cloud_or_shadow": 0.932,
+   "usable": true,
+   "file": "passes/w6_2026-08-03_L.webp"
+  },
+  {
+   "date": "2026-08-04",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.377,
+   "cloud_shadow": 0.383,
+   "near_cloud": 0.25,
+   "high_aerosol": 0.776,
+   "not_cloud_or_shadow": 0.271,
+   "usable": true,
+   "file": "passes/w6_2026-08-04_S.webp"
+  },
+  {
+   "date": "2026-08-09",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.352,
+   "cloud_shadow": 0.292,
+   "near_cloud": 0.204,
+   "high_aerosol": 0.824,
+   "not_cloud_or_shadow": 0.382,
+   "usable": true,
+   "file": "passes/w6_2026-08-09_S.webp"
+  },
+  {
+   "date": "2026-08-11",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.998,
+   "cloud": 0.196,
+   "cloud_shadow": 0.34,
+   "near_cloud": 0.333,
+   "high_aerosol": 0.936,
+   "not_cloud_or_shadow": 0.485,
+   "usable": true,
+   "file": "passes/w6_2026-08-11_L.webp"
+  },
+  {
+   "date": "2026-08-19",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.0,
+   "cloud_shadow": 0.0,
+   "near_cloud": 0.001,
+   "high_aerosol": 0.857,
+   "not_cloud_or_shadow": 1.0,
+   "usable": true,
+   "file": "passes/w6_2026-08-19_L.webp"
+  },
+  {
+   "date": "2026-08-19",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.05,
+   "cloud_shadow": 0.087,
+   "near_cloud": 0.129,
+   "high_aerosol": 0.955,
+   "not_cloud_or_shadow": 0.867,
+   "usable": true,
+   "file": "passes/w6_2026-08-19_S.webp"
+  },
+  {
+   "date": "2026-08-21",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.466,
+   "cloud_shadow": 0.323,
+   "near_cloud": 0.175,
+   "high_aerosol": 0.908,
+   "not_cloud_or_shadow": 0.257,
+   "usable": true,
+   "file": "passes/w6_2026-08-21_S.webp"
+  },
+  {
+   "date": "2026-08-24",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.218,
+   "cloud_shadow": 0.129,
+   "near_cloud": 0.18,
+   "high_aerosol": 0.852,
+   "not_cloud_or_shadow": 0.676,
+   "usable": true,
+   "file": "passes/w6_2026-08-24_S.webp"
+  },
+  {
+   "date": "2026-08-27",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.234,
+   "cloud_shadow": 0.187,
+   "near_cloud": 0.213,
+   "high_aerosol": 0.932,
+   "not_cloud_or_shadow": 0.6,
+   "usable": true,
+   "file": "passes/w6_2026-08-27_L.webp"
+  },
+  {
+   "date": "2026-08-29",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.565,
+   "cloud_shadow": 0.248,
+   "near_cloud": 0.148,
+   "high_aerosol": 0.907,
+   "not_cloud_or_shadow": 0.224,
+   "usable": false,
+   "file": "passes/w6_2026-08-29_S.webp"
+  },
+  {
+   "date": "2026-09-03",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.337,
+   "cloud_shadow": 0.263,
+   "near_cloud": 0.206,
+   "high_aerosol": 0.893,
+   "not_cloud_or_shadow": 0.424,
+   "usable": true,
+   "file": "passes/w6_2026-09-03_S.webp"
+  },
+  {
+   "date": "2026-09-04",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.126,
+   "cloud_shadow": 0.175,
+   "near_cloud": 0.199,
+   "high_aerosol": 0.984,
+   "not_cloud_or_shadow": 0.709,
+   "usable": true,
+   "file": "passes/w6_2026-09-04_L.webp"
+  },
+  {
+   "date": "2026-09-08",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.155,
+   "cloud_shadow": 0.216,
+   "near_cloud": 0.214,
+   "high_aerosol": 0.959,
+   "not_cloud_or_shadow": 0.639,
+   "usable": true,
+   "file": "passes/w6_2026-09-08_S.webp"
+  },
+  {
+   "date": "2026-09-10",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.316,
+   "cloud_shadow": 0.298,
+   "near_cloud": 0.25,
+   "high_aerosol": 0.91,
+   "not_cloud_or_shadow": 0.41,
+   "usable": true,
+   "file": "passes/w6_2026-09-10_S.webp"
+  },
+  {
+   "date": "2026-09-12",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.361,
+   "cloud_shadow": 0.319,
+   "near_cloud": 0.222,
+   "high_aerosol": 0.976,
+   "not_cloud_or_shadow": 0.36,
+   "usable": true,
+   "file": "passes/w6_2026-09-12_L.webp"
+  },
+  {
+   "date": "2026-09-13",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.986,
+   "cloud_shadow": 0.015,
+   "near_cloud": 0.003,
+   "high_aerosol": 0.643,
+   "not_cloud_or_shadow": 0.002,
+   "usable": false,
+   "file": "passes/w6_2026-09-13_S.webp"
+  },
+  {
+   "date": "2026-09-18",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.914,
+   "cloud_shadow": 0.084,
+   "near_cloud": 0.031,
+   "high_aerosol": 0.945,
+   "not_cloud_or_shadow": 0.046,
+   "usable": false,
+   "file": "passes/w6_2026-09-18_S.webp"
+  },
+  {
+   "date": "2026-09-20",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.462,
+   "cloud_shadow": 0.292,
+   "near_cloud": 0.183,
+   "high_aerosol": 0.95,
+   "not_cloud_or_shadow": 0.283,
+   "usable": true,
+   "file": "passes/w6_2026-09-20_L.webp"
+  },
+  {
+   "date": "2026-09-23",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.844,
+   "cloud_shadow": 0.131,
+   "near_cloud": 0.05,
+   "high_aerosol": 0.844,
+   "not_cloud_or_shadow": 0.066,
+   "usable": false,
+   "file": "passes/w6_2026-09-23_S.webp"
+  },
+  {
+   "date": "2026-09-28",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.943,
+   "cloud_shadow": 0.029,
+   "near_cloud": 0.017,
+   "high_aerosol": 0.838,
+   "not_cloud_or_shadow": 0.035,
+   "usable": false,
+   "file": "passes/w6_2026-09-28_L.webp"
+  },
+  {
+   "date": "2026-09-28",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 1.0,
+   "cloud_shadow": 0.0,
+   "near_cloud": 0.0,
+   "high_aerosol": 0.733,
+   "not_cloud_or_shadow": 0.0,
+   "usable": false,
+   "file": "passes/w6_2026-09-28_S.webp"
+  },
+  {
+   "date": "2026-09-30",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.008,
+   "cloud_shadow": 0.012,
+   "near_cloud": 0.028,
+   "high_aerosol": 0.996,
+   "not_cloud_or_shadow": 0.98,
+   "usable": true,
+   "file": "passes/w6_2026-09-30_S.webp"
+  },
+  {
+   "date": "2026-10-03",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.548,
+   "cloud_shadow": 0.224,
+   "near_cloud": 0.134,
+   "high_aerosol": 0.829,
+   "not_cloud_or_shadow": 0.274,
+   "usable": false,
+   "file": "passes/w6_2026-10-03_S.webp"
+  },
+  {
+   "date": "2026-10-06",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.375,
+   "cloud_shadow": 0.108,
+   "near_cloud": 0.105,
+   "high_aerosol": 0.996,
+   "not_cloud_or_shadow": 0.525,
+   "usable": true,
+   "file": "passes/w6_2026-10-06_L.webp"
+  },
+  {
+   "date": "2026-10-08",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.259,
+   "cloud_shadow": 0.198,
+   "near_cloud": 0.187,
+   "high_aerosol": 0.735,
+   "not_cloud_or_shadow": 0.592,
+   "usable": true,
+   "file": "passes/w6_2026-10-08_S.webp"
+  },
+  {
+   "date": "2026-10-13",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.401,
+   "cloud_shadow": 0.219,
+   "near_cloud": 0.193,
+   "high_aerosol": 0.519,
+   "not_cloud_or_shadow": 0.418,
+   "usable": true,
+   "file": "passes/w6_2026-10-13_S.webp"
+  },
+  {
+   "date": "2026-10-14",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.386,
+   "cloud_shadow": 0.193,
+   "near_cloud": 0.169,
+   "high_aerosol": 0.883,
+   "not_cloud_or_shadow": 0.445,
+   "usable": true,
+   "file": "passes/w6_2026-10-14_L.webp"
+  },
+  {
+   "date": "2026-10-18",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.637,
+   "cloud_shadow": 0.203,
+   "near_cloud": 0.107,
+   "high_aerosol": 0.854,
+   "not_cloud_or_shadow": 0.205,
+   "usable": false,
+   "file": "passes/w6_2026-10-18_S.webp"
+  },
+  {
+   "date": "2026-10-20",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.682,
+   "cloud_shadow": 0.143,
+   "near_cloud": 0.122,
+   "high_aerosol": 0.881,
+   "not_cloud_or_shadow": 0.218,
+   "usable": false,
+   "file": "passes/w6_2026-10-20_S.webp"
+  },
+  {
+   "date": "2026-10-22",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.856,
+   "cloud_shadow": 0.093,
+   "near_cloud": 0.05,
+   "high_aerosol": 0.942,
+   "not_cloud_or_shadow": 0.068,
+   "usable": false,
+   "file": "passes/w6_2026-10-22_L.webp"
+  },
+  {
+   "date": "2026-10-23",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 0.738,
+   "cloud": 0.256,
+   "cloud_shadow": 0.207,
+   "near_cloud": 0.206,
+   "high_aerosol": 0.784,
+   "not_cloud_or_shadow": 0.56,
+   "usable": false,
+   "file": "passes/w6_2026-10-23_S.webp"
+  },
+  {
+   "date": "2026-10-30",
+   "sensor": "Landsat",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 1.0,
+   "cloud_shadow": 0.0,
+   "near_cloud": 0.0,
+   "high_aerosol": 0.961,
+   "not_cloud_or_shadow": 0.0,
+   "usable": false,
+   "file": "passes/w6_2026-10-30_L.webp"
+  },
+  {
+   "date": "2026-11-02",
+   "sensor": "Sentinel-2",
+   "tiles": [
+    "T48MWB"
+   ],
+   "coverage": 1.0,
+   "cloud": 0.633,
+   "cloud_shadow": 0.243,
+   "near_cloud": 0.116,
+   "high_aerosol": 0.871,
+   "not_cloud_or_shadow": 0.171,
+   "usable": false,
+   "file": "passes/w6_2026-11-02_S.webp"
+  }
+ ]
+}

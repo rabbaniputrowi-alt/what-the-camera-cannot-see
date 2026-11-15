@@ -86,7 +86,7 @@ for g in allg:
     by_day.setdefault((g["date"], g["sn"]), []).append(g)
 print(f"{W}: {len(allg)} HLS granules on {len(by_day)} sensor-days", flush=True)
 
-nisar = sorted({s["startTime"][:10] for s in json.load(open(DATA / "gcov_scenes.json"))})
+nisar = sorted({s["startTime"][:10] for s in json.load(open(DATA / "gcov_scenes.json")) if W in s.get("windows", [W])})
 day = lambda s: dt.date.fromisoformat(s)
 index_path = DATA / "hls" / f"camera_{W}.json"
 prev = json.load(open(index_path)) if index_path.exists() else {}

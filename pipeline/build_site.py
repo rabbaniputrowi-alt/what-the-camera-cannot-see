@@ -87,6 +87,9 @@ hot = pd.read_csv(DATA / "firms" / "hotspots.csv")
 hot = hot[hot.source.str.startswith("VIIRS")]
 
 for w, wc in WINDOWS.items():
+    if not (DATA / "hls" / f"dnbr_{w}.npz").exists():
+        print(f"{w}: no optical burn map yet (run hls_dnbr.py {w}), window left out", flush=True)
+        continue
     bbox = wc["bbox"]
     west, south, east, north = bbox
     wm = {"label": wc["label"], "bbox": bbox, "tracks": {}}
@@ -160,7 +163,8 @@ for w, wc in WINDOWS.items():
     if pj.exists():
         P = json.load(open(pj))["passes"]
         radar = sorted((d, tr) for tr, t in wm["tracks"].items() for d in t["dates"])
-        listed = sorted({(s["startTime"][:10], str(s["pathNumber"])) for s in json.load(open(DATA / "gcov_scenes.json"))})
+        listed = sorted({(s["startTime"][:10], str(s["pathNumber"])) for s in json.load(open(DATA / "gcov_scenes.json"))
+                         if w in s.get("windows", [w])})
         per = []
         for lo, hi, name in PERIODS:
             q = [p for p in P if lo <= p["date"] <= hi]
@@ -177,16 +181,17 @@ for w, wc in WINDOWS.items():
 
 json.dump(meta, open(SITE_DATA / "meta.json", "w"), indent=1)
 
-# README table of the pass count, between its markers
-rows = ["| Period | Window 1: usable looks in full optical passes | Window 2: usable looks in full optical passes | NISAR passes with data |", "|---|---|---|---|"]
-ws = [meta["windows"][w].get("passes") for w in WINDOWS]
-if all(ws):
-    for i, (lo, hi, name) in enumerate(PERIODS):
-        cell = lambda p: (f"{p['usable']} of {p['optical']}" +
-                          (f" ({', '.join(day(d) for d in p['usable_dates'])})" if 0 < p["usable"] <= 2 else ""))
-        r = ws[0]["periods"][i]
-        rows.append(f"| {name}, {day(lo)} to {day(hi)} | {cell(ws[0]['periods'][i])} | {cell(ws[1]['periods'][i])} | "
-                    f"{min(r['radar_ok'], ws[1]['periods'][i]['radar_ok'])} of {r['radar']} |")
+# README table of the pass count, between its markers: one row per window, usable looks of full optical passes
+rows = ["| Window | " + " | ".join(f"{name}, {day(lo)} to {day(hi)}" for lo, hi, name in PERIODS) +
+        " | NISAR passes with data, peak |", "|---|" + "---|" * (len(PERIODS) + 1)]
+cell = lambda p: (f"{p['usable']} of {p['optical']}" +
+                  (f" ({', '.join(day(d) for d in p['usable_dates'])})" if 0 < p["usable"] <= 2 else ""))
+built = [w for w in WINDOWS if w in meta["windows"] and meta["windows"][w].get("passes")]
+if built:
+    for w in built:
+        per = meta["windows"][w]["passes"]["periods"]
+        rows.append(f"| {meta['windows'][w]['label']} | " + " | ".join(cell(p) for p in per) +
+                    f" | {per[-1]['radar_ok']} of {per[-1]['radar']} |")
     readme = (ROOT / "README.md").read_text(encoding="utf-8")
     if "<!-- passes:start" in readme:
         head, rest = readme.split("<!-- passes:start", 1)

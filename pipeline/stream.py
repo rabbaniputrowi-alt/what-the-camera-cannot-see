@@ -73,7 +73,8 @@ def read_scene(url, date, todo):
 
 for s in scenes:
     date = s["startTime"][:10]
-    todo = [w for w in a.windows if not win_path(w, a.track, date).exists()]
+    inside = s.get("windows", a.windows)          # windows this scene's footprint contains (search.py)
+    todo = [w for w in a.windows if w in inside and not win_path(w, a.track, date).exists()]
     if not todo:
         print(f"{date} t{a.track}: on disk, skipped", flush=True)
         continue
@@ -83,6 +84,6 @@ for s in scenes:
             break
         except Exception as e:
             print(f"{date} t{a.track}: attempt {attempt} failed: {type(e).__name__} {str(e)[:120]}", flush=True)
-            todo = [w for w in a.windows if not win_path(w, a.track, date).exists()]
+            todo = [w for w in a.windows if w in inside and not win_path(w, a.track, date).exists()]
             time.sleep(5 * attempt)
 print("done", flush=True)

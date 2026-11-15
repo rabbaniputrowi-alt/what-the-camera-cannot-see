@@ -2,7 +2,7 @@
 
 Usage: uv run python pipeline/hls_dnbr.py w1|w2
 Reads EDL_TOKEN from .env. Writes data/hls/dnbr_<window>.npz (pre, post, dnbr on a 40 m grid matching the
-track 125 radar window) and prints the clear share of every granule.
+first track's radar window, 125 for windows 1 to 4) and prints the clear share of every granule.
 
 NBR = (NIR - SWIR2) / (NIR + SWIR2). dNBR = median NBR in July minus median NBR from October to mid November.
 Cloud, cloud-adjacent, cloud shadow and water pixels are masked with HLS Fmask. Pixels flagged as high aerosol
@@ -14,7 +14,7 @@ import numpy as np, rasterio, requests
 from rasterio.warp import reproject, Resampling, transform_bounds
 from rasterio.windows import from_bounds
 from dotenv import dotenv_values
-from config import ROOT, DATA, WINDOWS, BASELINE, win_path
+from config import ROOT, DATA, WINDOWS, BASELINE, win_path, window_tracks
 
 W = sys.argv[1]
 BBOX = ",".join(str(v) for v in WINDOWS[W]["bbox"])
@@ -35,7 +35,8 @@ def signed(url):
     return r.url
 
 
-z = np.load(win_path(W, 125, BASELINE[125]))
+GRID_TRACK = window_tracks(W)[0]             # 125 for windows 1 to 4
+z = np.load(win_path(W, GRID_TRACK, BASELINE[GRID_TRACK]))
 x, y, epsg = z["x"][::4], z["y"][::4], int(z["epsg"])
 dx, dy = x[1] - x[0], y[1] - y[0]
 dst_tf = rasterio.transform.Affine(dx, 0, x[0] - dx / 2, 0, dy, y[0] - dy / 2)
@@ -97,6 +98,14 @@ def composite(t0, t1, max_cloud):
 
 
 pre_s, pre_i = composite(*PRE, 35)
+with np.errstate(all="ignore"):
+    pre_clear = float(np.isfinite(np.nanmedian(pre_s, axis=0)).mean()) if len(pre_s) else 0.0
+if pre_clear < 0.5:
+    # Added 2026-11-15 for windows 7 and 8, where the July tiles under 35% cloud leave less than half the window
+    # clear (w7 0.33, w8 none). Same cut as the after side; clouds are still masked pixel by pixel. Windows 1 to 6
+    # have July composites 0.79 to 1.00 clear and are unaffected.
+    print(f"pre: composite only {pre_clear:.2f} clear with tiles under 35% cloud, falling back to 80%", flush=True)
+    pre_s, pre_i = composite(*PRE, 80)
 print("pre", pre_i, flush=True)
 post_s, post_i = composite(*POST, 80)
 print("post", post_i, flush=True)

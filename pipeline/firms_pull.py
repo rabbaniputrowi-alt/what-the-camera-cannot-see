@@ -12,10 +12,13 @@ from config import ROOT, DATA
 
 KEY = (dotenv_values(ROOT / ".env").get("FIRMS_MAP_KEY") or "").strip()
 assert KEY, "FIRMS_MAP_KEY is empty in .env"
-BOX = "113.5,-3.5,114.8,-2.0"          # west, south, east, north: both windows with a margin
+import sys
+# west, south, east, north. Default: windows 1 and 2 with a margin. Windows 3 and 4 (added 2026-11-15) were
+# pulled with: firms_pull.py 112.6,-3.2,115.0,-2.2 hotspots_extra.csv, then merged by merge_firms.py.
+BOX = sys.argv[1] if len(sys.argv) > 1 else "113.5,-3.5,114.8,-2.0"
 START, END = dt.date(2026, 6, 15), dt.date(2026, 11, 13)
 SOURCES = ["VIIRS_SNPP_NRT", "VIIRS_NOAA20_NRT", "VIIRS_NOAA21_NRT", "MODIS_NRT"]
-out = DATA / "firms" / "hotspots.csv"
+out = DATA / "firms" / (sys.argv[2] if len(sys.argv) > 2 else "hotspots.csv")
 out.parent.mkdir(parents=True, exist_ok=True)
 assert not out.exists(), f"{out} exists; move it away before pulling again (this script appends)"
 

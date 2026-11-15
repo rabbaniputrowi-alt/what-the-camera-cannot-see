@@ -22,7 +22,8 @@ def auc(pos, neg):
     if len(pos) < 5 or len(neg) < 5:
         return None
     r = pd.Series(np.concatenate([pos, neg])).rank().values
-    return round(float((r[:len(pos)].sum() - len(pos) * (len(pos) + 1) / 2) / (len(pos) * len(neg))), 3)
+    # 6 decimals so the two-decimal README table rounds once, like the page (0.79497 is 0.79, not 0.795 then 0.80)
+    return round(float((r[:len(pos)].sum() - len(pos) * (len(pos) + 1) / 2) / (len(pos) * len(neg))), 6)
 
 
 def score_pair(a, b, lab):
