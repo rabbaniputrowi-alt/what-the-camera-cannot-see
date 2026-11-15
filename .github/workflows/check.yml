@@ -1,0 +1,19 @@
+name: check
+on: [push, pull_request]
+permissions:
+  contents: read
+jobs:
+  scores:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: astral-sh/setup-uv@v5
+      - name: Page scoring on hand-worked inputs
+        run: node tests/test_score.cjs
+      - name: Pipeline scoring on hand-worked inputs
+        run: uv run --no-project --python 3.12 --with "numpy>=2.4" --with "pandas>=3.1" python tests/test_score.py
+      - name: Page scoring equals the published pipeline scores
+        run: node tests/check_scores.cjs
