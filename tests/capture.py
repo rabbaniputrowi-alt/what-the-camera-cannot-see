@@ -39,7 +39,19 @@ with sync_playwright() as p:
         print("  " + s["live"])
         return s
 
+    page.wait_for_timeout(2500)   # the arrival sweep
     s = shot("01_default", full=True)
+    print("  readout: AUC", page.inner_text("#r-auc"), "| right", page.inner_text("#r-prec"), "| false alarms", page.inner_text("#r-fa"), "| caught", page.inner_text("#r-rec"))
+    print("  timeline:", page.locator("#t-cam .om").count(), "optical marks,", page.locator("#t-rad .rm").count(), "radar marks,", page.locator("#t-hist rect").count(), "hotspot bars")
+    print("  periods: " + " | ".join(page.locator("#t-periods .plab").all_inner_texts()))
+    page.locator("#t-cam .om.usable").first.hover(); page.wait_for_timeout(400)
+    page.locator(".time").screenshot(path=str(out / "13_timeline_tip.png"))
+    page.locator("#t-rad .rm").nth(3).click(); shot("14_radar_mark")
+    page.click("#preset-placebo"); page.click("#play"); page.wait_for_timeout(1400 * 3 + 600)
+    print("  after 3 play steps:", page.inner_text("#tag-b"), "| playing:", "playing" in (page.get_attribute("#play", "class") or ""))
+    page.click("#play")
+    page.click("#preset-fire")
+    page.click("#open-about"); page.wait_for_timeout(300)
     print("  table:"); [print("    " + r) for r in s["rows"]]
     print("\n[passes] " + page.inner_text("#pass-lead"))
     print("  periods: " + " | ".join(page.locator("#pass-periods .period p").all_inner_texts()))

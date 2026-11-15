@@ -105,16 +105,15 @@
 
   function live() {
     const j = state.pol === "hv" ? 0 : 1, s = scoreFor(state.a, state.b, j), P = state.pol.toUpperCase();
-    const lead = isPlacebo(state.a, state.b)
-      ? "Placebo pair: both passes are before the fire season, so nothing should show. "
-      : "";
     const fire = s.flaggedBurned + s.flaggedUnburned;
-    const rule = fire
-      ? `Where the optical map can judge, the rule is right <b>${pct(s.precision)}</b> of the time (${num(s.flaggedBurned)} of ${num(fire)} flagged cells are burned). It fires on <b>${pct(s.falseAlarm, 1)}</b> of unburned cells and catches <b>${pct(s.recall)}</b> of burned cells.`
-      : "The rule flags no cell that the optical map can judge.";
-    $("live").innerHTML = `${lead}${P}, ${fmt(state.a)} to ${fmt(state.b)}: AUC <b>${auc2(s.auc)}</b> ` +
-      `(the chance that a burned cell lost more echo than an unburned one; 0.50 means no signal). ` +
-      `The rule "${P} fell by 1 dB or more" flags ${num(s.flagged)} of ${num(N * N)} cells. ${rule}`;
+    $("r-title").textContent = `${P}, ${fmt(state.a)} to ${fmt(state.b)}`;
+    $("r-placebo").hidden = !isPlacebo(state.a, state.b);
+    $("r-auc").textContent = auc2(s.auc);
+    $("r-prec").textContent = fire ? pct(s.precision) : "none";
+    $("r-fa").textContent = pct(s.falseAlarm, 1);
+    $("r-rec").textContent = pct(s.recall);
+    $("live").textContent = `The rule "${P} fell by 1 dB or more" flags ${num(s.flagged)} of ${num(N * N)} cells` +
+      (fire ? `; ${num(s.flaggedBurned)} of the ${num(fire)} the optical map can judge are burned.` : `; none of them can be judged by the optical map.`);
   }
 
   /* Time series: median change since the baseline for burned and unburned cells, with hotspot counts per interval. */
@@ -237,8 +236,8 @@
           state.tr = r.track; state.b = r.date;
           if (!t.dates.includes(state.a) || state.a >= r.date) state.a = r.date > t.baseline ? t.baseline : t.dates[0];
           if (state.a >= state.b) state.b = t.dates[1];
-          await loadData(); controls(); syncDates(); render();
-          $("viewer").scrollIntoView({ behavior: "smooth", block: "center" });
+          await loadData(); controls(); syncDates(); buildTimeline(); render();
+          closeAbout();
         });
         s2.appendChild(b);
       }
@@ -252,6 +251,120 @@
     for (const b of document.querySelectorAll("#pass-periods button.pass"))
       b.setAttribute("aria-pressed", String(b.dataset.date === state.b && b.dataset.track === state.tr));
   }
+
+  /* ---------- season timeline: fires, every optical pass, every radar pass of this track ---------- */
+  const dayN = (s) => Date.parse(s + "T00:00:00Z") / 864e5;
+  let span = null;
+  const xp = (d) => ((dayN(d) - span[0]) / (span[1] - span[0])) * 100;
+  function buildTimeline() {
+    const all = cache.passes[state.w], info = win().passes, d = trk().dates;
+    span = all ? [dayN(all.period[0]), dayN(all.period[1])] : [dayN(d[0]) - 3, dayN(d[d.length - 1]) + 3];
+    // period bands with their camera counts
+    const pb = $("t-periods"); pb.textContent = "";
+    if (info) for (const per of info.periods) {
+      const el = document.createElement("div"); el.className = "pband" + (per === info.periods[info.periods.length - 1] ? " peak" : "");
+      el.style.left = xp(per.from) + "%"; el.style.width = (xp(per.to) - xp(per.from)) + "%";
+      el.innerHTML = `<span class="plab">${per.label}<span>: camera <b>${per.usable}</b> of ${per.optical}, radar <b>${per.radar_ok}</b> of ${per.radar}</span></span>`;
+      pb.appendChild(el);
+    }
+    const sel = document.createElement("div"); sel.className = "sel"; sel.id = "t-sel"; pb.appendChild(sel);
+    // weekly VIIRS detections inside the window
+    const wk = 7, bins = Math.ceil((span[1] - span[0]) / wk), c = new Array(bins).fill(0);
+    for (const q of hot) { const k = Math.floor((dayN(q[2]) - span[0]) / wk); if (k >= 0 && k < bins) c[k]++; }
+    const top = Math.max(1, ...c);
+    $("t-hist").setAttribute("viewBox", `0 0 ${bins} 1`);
+    $("t-hist").innerHTML = c.map((v, k) => v ? `<rect x="${k + 0.08}" y="${1 - v / top}" width="0.84" height="${v / top}"><title>${num(v)} detections</title></rect>` : "").join("");
+    // camera lane
+    const cam = $("t-cam"); cam.textContent = "";
+    if (all) {
+      const perDay = {};
+      for (const q of all.passes) (perDay[q.date] = perDay[q.date] || []).push(q);
+      for (const [date, list] of Object.entries(perDay)) list.forEach((q, i) => {
+        const b = document.createElement("button"); b.type = "button";
+        b.className = "om" + (q.usable ? " usable" : "") + (q.coverage < all.rule.min_coverage ? " partial" : "") + (list.length > 1 ? " stack" + (i ? "" : "0") : "");
+        b.style.left = xp(date) + "%";
+        const what = q.cloud === undefined ? "no data over the window" : `${pct(q.cloud)} cloud by its own mask`;
+        b.dataset.tip = `<b>${q.sensor}, ${fmt(date)}</b><br>${q.usable ? "Usable look. " : ""}${what}${q.coverage < all.rule.min_coverage ? `, covers ${pct(q.coverage)} of the window` : ""}`;
+        if (q.file) b.dataset.img = D + q.file;
+        b.setAttribute("aria-label", `${q.sensor}, ${fmt(date)}: ${q.usable ? "usable look" : what}`);
+        cam.appendChild(b);
+      });
+    }
+    // radar lane: this track's passes, select to make it the after date
+    const rad = $("t-rad"); rad.textContent = "";
+    for (const date of d) {
+      const b = document.createElement("button"); b.type = "button"; b.className = "rm"; b.dataset.date = date;
+      b.style.left = xp(date) + "%";
+      b.setAttribute("aria-label", `NISAR pass ${fmt(date)}, track ${state.tr}`);
+      b.title = `NISAR ${fmt(date)}, track ${state.tr}. Select to compare with it.`;
+      b.addEventListener("click", () => {
+        stopPlay();
+        if (date > state.a) state.b = date;
+        else if (date === d[0]) { state.a = d[0]; state.b = d[1]; }
+        else { state.a = d[0]; state.b = date; }
+        syncDates(); render();
+      });
+      rad.appendChild(b);
+    }
+    // month ticks
+    const ax = $("t-axis"); ax.textContent = "";
+    const s0 = new Date(span[0] * 864e5), s1 = new Date(span[1] * 864e5);
+    for (let m = new Date(Date.UTC(s0.getUTCFullYear(), s0.getUTCMonth() + 1, 1)); m <= s1; m = new Date(Date.UTC(m.getUTCFullYear(), m.getUTCMonth() + 1, 1))) {
+      const el = document.createElement("span"); el.textContent = MONTHS[m.getUTCMonth()];
+      el.style.left = ((m / 864e5 - span[0]) / (span[1] - span[0])) * 100 + "%"; ax.appendChild(el);
+    }
+  }
+  function markTimeline() {
+    if (!span) return;
+    for (const b of $("t-rad").children) {
+      b.classList.toggle("is-a", b.dataset.date === state.a); b.classList.toggle("is-b", b.dataset.date === state.b);
+      b.setAttribute("aria-pressed", String(b.dataset.date === state.b));
+    }
+    const sel = $("t-sel"); if (sel) { sel.style.left = xp(state.a) + "%"; sel.style.width = (xp(state.b) - xp(state.a)) + "%"; }
+  }
+  function showTip(b) {
+    const tip = $("tip"), box = $("track").parentElement.getBoundingClientRect(), r = b.getBoundingClientRect();
+    tip.innerHTML = (b.dataset.img ? `<img src="${b.dataset.img}" alt="">` : "") + b.dataset.tip;
+    tip.hidden = false;
+    const w = tip.offsetWidth, x = Math.min(Math.max(8, r.left + r.width / 2 - box.left - w / 2), box.width - w - 8);
+    tip.style.left = x + "px";
+  }
+  const hideTip = () => { $("tip").hidden = true; };
+  for (const ev of ["mouseover", "focusin"]) $("t-cam").addEventListener(ev, (e) => { if (e.target.classList.contains("om")) showTip(e.target); });
+  for (const ev of ["mouseout", "focusout"]) $("t-cam").addEventListener(ev, (e) => { if (e.target.classList.contains("om")) hideTip(); });
+  $("t-cam").addEventListener("click", (e) => { if (e.target.classList.contains("om")) showTip(e.target); });
+
+  /* Play: step the after date through the season, one pass at a time. */
+  let playTimer = null;
+  function stopPlay() { if (playTimer) { clearInterval(playTimer); playTimer = null; } $("play").classList.remove("playing"); $("play").setAttribute("aria-label", "Play through the season"); }
+  function startPlay() {
+    const d = trk().dates;
+    if (state.b === d[d.length - 1]) { state.a = d[0]; state.b = d[1]; syncDates(); render(); }
+    $("play").classList.add("playing"); $("play").setAttribute("aria-label", "Pause");
+    playTimer = setInterval(() => {
+      const later = trk().dates.filter((x) => x > state.a), i = later.indexOf(state.b);
+      if (i < 0 || i >= later.length - 1) { stopPlay(); return; }
+      state.b = later[i + 1]; syncDates(); render();
+      if (i + 1 >= later.length - 1) stopPlay();
+    }, 1400);
+  }
+  $("play").addEventListener("click", () => (playTimer ? stopPlay() : startPlay()));
+
+  /* About drawer */
+  function openAbout(target) {
+    $("about").hidden = false; $("scrim").hidden = false; $("open-about").setAttribute("aria-expanded", "true");
+    if (target) $(target).scrollIntoView({ block: "start" }); else $("about").scrollTop = 0;
+    $("close-about").focus();
+  }
+  function closeAbout() {
+    if ($("about").hidden) return;
+    $("about").hidden = true; $("scrim").hidden = true; $("open-about").setAttribute("aria-expanded", "false"); $("open-about").focus();
+  }
+  $("open-about").addEventListener("click", () => openAbout());
+  $("open-scores").addEventListener("click", () => openAbout("scores"));
+  $("close-about").addEventListener("click", closeAbout);
+  $("scrim").addEventListener("click", closeAbout);
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape") closeAbout(); });
 
   /* ---------- controls ---------- */
   function seg(el, items, current, onPick) {
@@ -296,7 +409,7 @@
     await loadData();
     const d = trk().dates;
     if (resetDates || !d.includes(state.a) || !d.includes(state.b)) [state.a, state.b] = firePair();
-    controls(); syncDates(); passPanel(); render();
+    controls(); syncDates(); passPanel(); buildTimeline(); render();
   }
 
   async function render() {
@@ -318,7 +431,7 @@
     }
     const d = trk().dates;
     ch = Score.change(cells, N, d.indexOf(state.a), d.indexOf(state.b), state.pol === "hv" ? 0 : 1, meta.cell_nodata);
-    live(); series(); table(); syncDates(); markPass();
+    live(); series(); table(); syncDates(); markPass(); markTimeline();
     changeCanvas = null; draw();
     imgA.src = camMode ? (cam ? D + cam.file : BLANK) : src(state.a);
     imgB.src = src(state.b);
@@ -338,32 +451,34 @@
   for (const id of ["layer-change", "layer-rule", "layer-hot", "layer-opt"]) $(id).addEventListener("change", draw);
   for (const b of $("pick-pol").children) b.addEventListener("click", () => { state.pol = b.dataset.pol; controls(); render(); });
   for (const b of $("pick-mode").children) b.addEventListener("click", () => { state.mode = b.dataset.mode; controls(); render(); });
-  $("date-a").addEventListener("change", (e) => { state.a = e.target.value; syncDates(); render(); });
-  $("date-b").addEventListener("change", (e) => { state.b = e.target.value; render(); });
+  $("date-a").addEventListener("change", (e) => { stopPlay(); state.a = e.target.value; syncDates(); render(); });
+  $("date-b").addEventListener("change", (e) => { stopPlay(); state.b = e.target.value; render(); });
   function step(k) {
     const later = trk().dates.filter((x) => x > state.a), i = later.indexOf(state.b) + k;
     if (i >= 0 && i < later.length) { state.b = later[i]; render(); }
   }
-  $("prev-b").addEventListener("click", () => step(-1));
-  $("next-b").addEventListener("click", () => step(1));
-  $("preset-fire").addEventListener("click", () => { [state.a, state.b] = firePair(); render(); });
-  $("preset-placebo").addEventListener("click", () => { [state.a, state.b] = placeboPair(); render(); });
+  $("prev-b").addEventListener("click", () => { stopPlay(); step(-1); });
+  $("next-b").addEventListener("click", () => { stopPlay(); step(1); });
+  $("preset-fire").addEventListener("click", () => { stopPlay(); [state.a, state.b] = firePair(); render(); });
+  $("preset-placebo").addEventListener("click", () => { stopPlay(); [state.a, state.b] = placeboPair(); render(); });
 
   $("scale-note").textContent = "Each image is about 22 km across, north up. Dates are UTC. Brighter means a stronger radar echo.";
   state.tr = win().tracks["125"] ? "125" : Object.keys(win().tracks)[0];
 
-  /* The claim under the title, from the peak period of the first window, so it cannot drift from the counts. */
+  /* The claim in the app bar, from the peak period of the first window, so it cannot drift from the counts. */
   (function claim() {
     const info = win().passes; if (!info) return;
     const pk = info.periods[info.periods.length - 1];
     const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
-    const FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-    const long = (s) => { const p = s.split("-"); return `${+p[2]} ${FULL[+p[1] - 1]}`; };
     const u = WORDS[pk.usable] || String(pk.usable);
-    const radar = pk.radar_ok === pk.radar ? `all ${pk.radar} of its passes` : `${pk.radar_ok} of its ${pk.radar} passes`;
-    $("claim").textContent = `At the peak of the fires, from ${long(pk.from)} to ${long(pk.to)}, the optical satellites got ${u} usable look${pk.usable === 1 ? "" : "s"} ` +
-      `at these canal blocks in ${pk.optical} passes. The radar returned an image on ${radar}.`;
+    const radar = pk.radar_ok === pk.radar ? `all ${pk.radar}` : `${pk.radar_ok} of ${pk.radar}`;
+    $("claim").textContent = `At the peak of the fires, the optical satellites got ${u} usable look${pk.usable === 1 ? "" : "s"} in ${pk.optical} passes, and the radar got an image on ${radar}.`;
   })();
+
+  /* First-visit hint, gone after the first drag. */
+  let seen = false; try { seen = localStorage.getItem("wtccs-dragged") === "1"; } catch (e) { /* private mode */ }
+  if (!seen) $("hint").hidden = false;
+  $("viewer").addEventListener("pointerdown", () => { $("hint").hidden = true; try { localStorage.setItem("wtccs-dragged", "1"); } catch (e) { /* ignore */ } });
 
   /* One sweep on arrival: the divider starts at the right edge (all camera) and moves to the middle, uncovering the radar.
      Skipped for reduced motion, and stopped the moment the visitor touches the viewer. */
