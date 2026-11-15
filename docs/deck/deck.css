@@ -24,7 +24,7 @@ img { display: block; }
 }
 .slide.on { display: grid; }
 .slide::after {   /* running footer */
-  content: "What the camera cannot see"; position: absolute; left: 120px; bottom: 44px;
+  content: "Going Beyond the Lens"; position: absolute; left: 120px; bottom: 44px;
   font-size: 20px; color: var(--ink-3); letter-spacing: .01em;
 }
 .slide .pg { position: absolute; left: 430px; bottom: 44px; font-size: 20px; color: var(--ink-3); font-variant-numeric: tabular-nums; }

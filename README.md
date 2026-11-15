@@ -1,4 +1,4 @@
-# What the camera cannot see
+# Going Beyond the Lens
 
 NISAR L-band radar over the 2026 fire season in Indonesia: eight windows of about 22 km, starting from the peat
 fires in Pulang Pisau, Central Kalimantan, and reaching West Kalimantan, South Sumatra and South Papua.
