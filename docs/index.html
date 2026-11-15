@@ -5,55 +5,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What the camera cannot see: NISAR radar over the 2026 Central Kalimantan peat fires</title>
 <meta name="description" content="NISAR L-band radar shows the 2026 peat-fire burn scars in Pulang Pisau, Central Kalimantan, on days when optical satellites saw smoke and cloud.">
+<meta name="theme-color" content="#17110e">
 <link rel="icon" href="data:,">
+<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header>
-  <h1>What the camera cannot see</h1>
-  <p class="where">NISAR L-band radar over the 2026 peat fires in Pulang Pisau, Central Kalimantan, Indonesia</p>
-  <p class="placeholder" id="idea-statement">PLACEHOLDER (idea statement): Rabbani's own words go here.</p>
-</header>
+<div class="stage">
+  <header class="head">
+    <h1>What the camera cannot see</h1>
+    <p class="where">NISAR L-band radar over the 2026 peat fires in Pulang Pisau, Central Kalimantan, Indonesia</p>
+    <p class="claim" id="claim">At the peak of the fires, from 15 September to 1 November, the optical satellites got one usable look at these canal blocks in 11 passes. The radar returned an image on all 7 of its passes.</p>
+    <p class="placeholder" id="idea-statement">PLACEHOLDER (idea statement): Rabbani's own words go here.</p>
+  </header>
 
-<main>
-  <section class="viewer-wrap" aria-label="Before and after radar viewer">
-    <div class="controls">
-      <fieldset id="mode-box">
-        <legend>Compare</legend>
-        <div id="pick-mode" class="seg">
-          <button type="button" data-mode="camera">Camera and radar</button>
-          <button type="button" data-mode="radar">Radar before and after</button>
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend>Place</legend>
-        <div id="pick-window" class="seg"></div>
-      </fieldset>
-      <fieldset>
-        <legend>Orbit</legend>
-        <div id="pick-track" class="seg"></div>
-      </fieldset>
-      <fieldset>
-        <legend>Radar channel</legend>
-        <div id="pick-pol" class="seg">
-          <button type="button" data-pol="hv">HV (cross-polarized)</button>
-          <button type="button" data-pol="hh">HH (co-polarized)</button>
-        </div>
-      </fieldset>
-      <fieldset>
-        <legend>Dates</legend>
-        <label>Before <select id="date-a"></select></label>
-        <label>After <select id="date-b"></select></label>
-        <button type="button" id="prev-b" aria-label="Earlier after date">Earlier</button>
-        <button type="button" id="next-b" aria-label="Later after date">Later</button>
-      </fieldset>
-      <fieldset>
-        <legend>Jump to</legend>
-        <button type="button" id="preset-fire">Fire season</button>
-        <button type="button" id="preset-placebo">Placebo: two passes before the fires</button>
-      </fieldset>
-    </div>
-
+  <section class="plate" aria-label="Before and after radar viewer">
     <div class="viewer" id="viewer">
       <img id="img-a" alt="Radar image, before date">
       <p class="nocam" id="nocam" hidden>No Landsat or Sentinel-2 pass within 3 days of this radar pass covers the window.</p>
@@ -68,76 +34,134 @@
     </div>
     <p class="scale" id="scale-note"></p>
     <p class="camnote" id="cam-note" hidden></p>
-
-    <div class="layers">
-      <label><input type="checkbox" id="layer-change" checked> <span class="sw sw-drop"></span> Radar change between the two dates (red: echo got weaker, blue: stronger)</label>
-      <label><input type="checkbox" id="layer-rule"> <span class="sw sw-rule"></span> The rule: cells where the echo fell by 1 dB or more</label>
-      <label><input type="checkbox" id="layer-hot"> <span class="sw sw-hot"></span> Fire hotspots detected between the two dates (VIIRS, <span id="hot-count">0</span> shown)</label>
-      <label><input type="checkbox" id="layer-opt"> <span class="sw sw-burn"></span> Optical burn map (orange: burned, dark red: severe, grey: no clear view at all)</label>
-    </div>
-    <p class="note">Layers are drawn on the after side only. Drag the divider to compare.</p>
   </section>
 
-  <section class="panel" aria-label="Every satellite pass of the season" id="passes" hidden>
+  <section class="rail" aria-label="Viewer controls">
+    <div class="group" id="mode-box">
+      <p class="glabel" id="l-mode">Compare</p>
+      <div id="pick-mode" class="seg" role="group" aria-labelledby="l-mode">
+        <button type="button" data-mode="camera">Camera and radar</button>
+        <button type="button" data-mode="radar">Radar before and after</button>
+      </div>
+    </div>
+    <div class="group">
+      <p class="glabel" id="l-place">Place</p>
+      <div id="pick-window" class="seg" role="group" aria-labelledby="l-place"></div>
+    </div>
+    <div class="pair">
+      <div class="group">
+        <p class="glabel" id="l-orbit">Orbit</p>
+        <div id="pick-track" class="seg" role="group" aria-labelledby="l-orbit"></div>
+      </div>
+      <div class="group">
+        <p class="glabel" id="l-pol">Radar channel</p>
+        <div id="pick-pol" class="seg" role="group" aria-labelledby="l-pol">
+          <button type="button" data-pol="hv">HV (cross-polarized)</button>
+          <button type="button" data-pol="hh">HH (co-polarized)</button>
+        </div>
+      </div>
+    </div>
+    <div class="group">
+      <p class="glabel">Dates</p>
+      <div class="dates">
+        <label>Before <select id="date-a"></select></label>
+        <label>After <select id="date-b"></select></label>
+        <span class="steps">
+          <button type="button" id="prev-b" aria-label="Earlier after date">Earlier</button>
+          <button type="button" id="next-b" aria-label="Later after date">Later</button>
+        </span>
+      </div>
+    </div>
+    <div class="group">
+      <p class="glabel">Jump to</p>
+      <div class="seg">
+        <button type="button" id="preset-fire">Fire season</button>
+        <button type="button" id="preset-placebo">Placebo: two passes before the fires</button>
+      </div>
+    </div>
+
+    <div class="group layers">
+      <p class="glabel">Layers on the radar side</p>
+      <label><input type="checkbox" id="layer-change" checked> <span class="sw sw-drop"></span> <span>Radar change between the two dates (red: echo got weaker, blue: stronger)</span></label>
+      <label><input type="checkbox" id="layer-rule"> <span class="sw sw-rule"></span> <span>The rule: cells where the echo fell by 1 dB or more</span></label>
+      <label><input type="checkbox" id="layer-hot"> <span class="sw sw-hot"></span> <span>Fire hotspots detected between the two dates (VIIRS, <span id="hot-count">0</span> shown)</span></label>
+      <label><input type="checkbox" id="layer-opt"> <span class="sw sw-burn"></span> <span>Optical burn map (orange: burned, dark red: severe, grey: no clear view at all)</span></label>
+      <p class="note">Drag across the image to move the divider.</p>
+    </div>
+
+    <div class="group score">
+      <p class="glabel">Score for this pair</p>
+      <p id="live" class="live"></p>
+    </div>
+  </section>
+</div>
+
+<main>
+  <section class="passes" aria-label="Every satellite pass of the season" id="passes" hidden>
     <h2>Every pass, camera and radar</h2>
-    <p id="pass-lead" class="live"></p>
-    <p class="note" id="pass-rule"></p>
+    <p id="pass-lead" class="lead"></p>
     <div id="pass-periods"></div>
+    <p class="note" id="pass-rule"></p>
     <p class="note" id="pass-note"></p>
   </section>
 
-  <section class="panel" aria-label="Scores">
-    <h2>Check it against the optical burn map</h2>
-    <p id="live" class="live"></p>
-    <h3 id="series-title"></h3>
-    <div id="series"></div>
-    <p class="note">Red line: cells the optical map calls burned. Black line: cells it calls unburned. Both are the median change since the baseline pass. Yellow bars: VIIRS detections inside the window since the previous pass. A burn should show as the red line leaving the black line after the fires arrive, not before. Dashed lines mark the two dates in the viewer.</p>
-    <h3>Every pair on this orbit</h3>
-    <p class="note">Placebo pairs are two passes before the fire season, scored against the same burn map. A real signal should show nothing there: an AUC near 0.50 and almost no flagged cells.</p>
-    <div class="tablewrap">
-      <table id="pairs">
-        <thead>
-          <tr><th>Kind</th><th>Before</th><th>After</th><th>HV AUC</th><th>HH AUC</th><th>HV rule: right when it fires</th><th>HV rule: false alarms</th><th>HV rule: burned cells caught</th></tr>
-        </thead>
-        <tbody></tbody>
-      </table>
+  <details class="fold" open>
+    <summary><span class="ftitle">Check it against the optical burn map</span><span class="fsub">The radar change scored against an optical burn map, for every date pair on this orbit, with placebo pairs from before the fires.</span></summary>
+    <div class="fbody">
+      <h3 id="series-title"></h3>
+      <div id="series"></div>
+      <p class="note">Red line: cells the optical map calls burned. Light line: cells it calls unburned. Both are the median change since the baseline pass. Yellow bars: VIIRS detections inside the window since the previous pass. A burn should show as the red line leaving the light line after the fires arrive, not before. Dashed lines mark the two dates in the viewer.</p>
+      <h3>Every pair on this orbit</h3>
+      <p class="note">Placebo pairs are two passes before the fire season, scored against the same burn map. A real signal should show nothing there: an AUC near 0.50 and almost no flagged cells. Select a row to load it in the viewer.</p>
+      <div class="tablewrap">
+        <table id="pairs">
+          <thead>
+            <tr><th>Kind</th><th>Before</th><th>After</th><th>HV AUC</th><th>HH AUC</th><th>HV rule: right when it fires</th><th>HV rule: false alarms</th><th>HV rule: burned cells caught</th></tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+      <p class="note" id="label-note"></p>
     </div>
-    <p class="note" id="label-note"></p>
-  </section>
+  </details>
 
-  <section class="text">
-    <h2>What the layers are</h2>
-    <dl>
-      <dt>HV and HH</dt>
-      <dd>The radar sends a horizontally polarized pulse. HH is the part of the echo that comes back horizontal, HV the part that comes back vertical. Leaves and branches turn the wave, so standing vegetation is bright in HV. When it burns, the HV echo drops. Over peat swamp HH changes too, but in these windows it does not follow the burn. A likely reason, not tested here, is that HH mostly follows how wet the ground is.</dd>
-      <dt>Radar change</dt>
-      <dd>The after image minus the before image, in decibels, averaged to about 100 m for display. The scores use cells of about 200 m.</dd>
-      <dt>Fire hotspots</dt>
-      <dd>Centres of VIIRS 375 m active-fire detections from NASA FIRMS. A hotspot is a detection of heat at overpass time, not a map of burned ground.</dd>
-      <dt>Optical burn map</dt>
-      <dd>Change in the Normalized Burn Ratio between July 2026 and the few usable passes from 4 October to 5 November 2026, from Harmonized Landsat and Sentinel-2 (HLS). The after side is read through smoke, and where no clear pixel exists the map is grey and nothing is scored.</dd>
-    </dl>
-  </section>
+  <details class="fold">
+    <summary><span class="ftitle">What the layers are</span><span class="fsub">HV and HH, radar change, fire hotspots and the optical burn map, in plain terms.</span></summary>
+    <div class="fbody">
+      <dl>
+        <dt>HV and HH</dt>
+        <dd>The radar sends a horizontally polarized pulse. HH is the part of the echo that comes back horizontal, HV the part that comes back vertical. Leaves and branches turn the wave, so standing vegetation is bright in HV. When it burns, the HV echo drops. Over peat swamp HH changes too, but in these windows it does not follow the burn. A likely reason, not tested here, is that HH mostly follows how wet the ground is.</dd>
+        <dt>Radar change</dt>
+        <dd>The after image minus the before image, in decibels, averaged to about 100 m for display. The scores use cells of about 200 m.</dd>
+        <dt>Fire hotspots</dt>
+        <dd>Centres of VIIRS 375 m active-fire detections from NASA FIRMS. A hotspot is a detection of heat at overpass time, not a map of burned ground.</dd>
+        <dt>Optical burn map</dt>
+        <dd>Change in the Normalized Burn Ratio between July 2026 and the few usable passes from 4 October to 5 November 2026, from Harmonized Landsat and Sentinel-2 (HLS). The after side is read through smoke, and where no clear pixel exists the map is grey and nothing is scored.</dd>
+      </dl>
+    </div>
+  </details>
 
-  <section class="text">
-    <h2>Limits</h2>
-    <ul id="limits">
-      <li>Two windows of about 22 km, two orbits, one fire season. This is not a burned-area product.</li>
-      <li>The optical map used as truth is itself read through smoke. Thick smoke lowers near-infrared reflectance, so some of the optical burn may be haze.</li>
-      <li>Large parts of both windows have no clear optical pixel in the after period and are not scored.</li>
-      <li>The 1 dB rule finds the strongly changed core of the burn, not all of it. It was fixed before scoring and has not been tuned or cross-validated.</li>
-      <li>In window 2 the placebo test fails on some pairs: before the fires, cells that later burned were already losing HV (AUC up to 0.77), and the burned sample is small. Window 1 is the clean case.</li>
-      <li>Radar change is not fire by itself. Water level, rain and land clearing change the echo too, and one such patch shows in window 1 between 4 and 16 July.</li>
-      <li>The camera did see the ground: on most passes in August and early September, and once per window at the peak of the fires. The start of the peak period (15 September) was chosen after looking at the images, which is why all three periods are shown. The optical images are surface reflectance, already corrected for the atmosphere, so thin haze looks clearer than it was.</li>
-      <li>The radar products are mostly provisional releases. The display images use a 3 by 3 mean filter; the scores use no speckle filter beyond averaging to 200 m.</li>
-    </ul>
-  </section>
+  <details class="fold">
+    <summary><span class="ftitle">Limits</span><span class="fsub">Two windows of about 22 km and one fire season. Window 2 fails the placebo test on some pairs, so window 1 is the clean case.</span></summary>
+    <div class="fbody">
+      <ul id="limits">
+        <li>Two windows of about 22 km, two orbits, one fire season. This is not a burned-area product.</li>
+        <li>The optical map used as truth is itself read through smoke. Thick smoke lowers near-infrared reflectance, so some of the optical burn may be haze.</li>
+        <li>Large parts of both windows have no clear optical pixel in the after period and are not scored.</li>
+        <li>The 1 dB rule finds the strongly changed core of the burn, not all of it. It was fixed before scoring and has not been tuned or cross-validated.</li>
+        <li>In window 2 the placebo test fails on some pairs: before the fires, cells that later burned were already losing HV (AUC up to 0.77), and the burned sample is small. Window 1 is the clean case.</li>
+        <li>Radar change is not fire by itself. Water level, rain and land clearing change the echo too, and one such patch shows in window 1 between 4 and 16 July.</li>
+        <li>The camera did see the ground: on most passes in August and early September, and once per window at the peak of the fires. The start of the peak period (15 September) was chosen after looking at the images, which is why all three periods are shown. The optical images are surface reflectance, already corrected for the atmosphere, so thin haze looks clearer than it was.</li>
+        <li>The radar products are mostly provisional releases. The display images use a 3 by 3 mean filter; the scores use no speckle filter beyond averaging to 200 m.</li>
+      </ul>
+    </div>
+  </details>
 </main>
 
 <footer>
   <h2>Data, code and credits</h2>
   <p>Radar: NISAR L2 GCOV (NASA and ISRO), read from the Alaska Satellite Facility DAAC. Fire detections: NASA FIRMS, VIIRS 375 m. Optical: NASA Harmonized Landsat and Sentinel-2 (HLS) v2.0. Full list with links: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see/blob/main/REFERENCES.md">REFERENCES.md</a>.</p>
-  <p>Code and method: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see">github.com/rabbaniputrowi-alt/what-the-camera-cannot-see</a>, MIT licence. Built for the NASA Space Apps Challenge 2026, challenge "Dancing with the SARs", Jakarta local event. This project is not endorsed by NASA.</p>
+  <p>Code and method: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see">github.com/rabbaniputrowi-alt/what-the-camera-cannot-see</a>, MIT licence. Built for the NASA Space Apps Challenge 2026, challenge "Dancing with the SARs", Jakarta local event. This project is not endorsed by NASA. Set in Archivo (SIL Open Font License, <a href="fonts/OFL-Archivo.txt">licence text</a>).</p>
   <p class="placeholder" id="ai-statement">PLACEHOLDER (AI statement): Rabbani's statement on how AI tools were used goes here.</p>
 </footer>
 

@@ -135,24 +135,25 @@
     const short = (s) => { const p = s.split("-"); return `${+p[2]} ${MONTHS[+p[1] - 1]}`; };
     let g = "";
     for (let v = lo; v <= hi + 1e-9; v += 0.5) {
-      g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" stroke="${v === 0 ? "#888" : "#e2e2e2"}"/>` +
+      g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:${v === 0 ? "var(--ash-3)" : "var(--line)"}"/>` +
         `<text x="${L - 6}" y="${Y(v) + 4}" text-anchor="end">${v > 0 ? "+" : ""}${v.toFixed(1)}</text>`;
     }
     d.forEach((x, i) => {
       if (i && counts[i]) {
         const h = counts[i] / top * barH;
-        g += `<rect x="${X(d[i - 1]) + 1}" y="${H - B - h}" width="${X(x) - X(d[i - 1]) - 2}" height="${h}" fill="#f2d200" opacity="0.55"/>` +
-          `<text x="${(X(x) + X(d[i - 1])) / 2}" y="${H - B - 4}" text-anchor="middle" fill="#5a4e00">${num(counts[i])}</text>`;
+        g += `<rect x="${X(d[i - 1]) + 1}" y="${H - B - h}" width="${X(x) - X(d[i - 1]) - 2}" height="${h}" fill="#f2d200" opacity="0.2"/>` +
+          `<line x1="${X(d[i - 1]) + 1}" x2="${X(x) - 1}" y1="${H - B - h}" y2="${H - B - h}" stroke="#f2d200" stroke-width="1.5"/>` +
+          `<text x="${(X(x) + X(d[i - 1])) / 2}" y="${H - B - 4}" text-anchor="middle" style="fill:#f2d200">${num(counts[i])}</text>`;
       }
       g += `<text x="${X(x)}" y="${H - B + 18}" text-anchor="middle">${short(x)}</text>`;
     });
     for (const [x, name] of [[state.a, "before"], [state.b, "after"]]) {
-      g += `<line x1="${X(x)}" x2="${X(x)}" y1="${T}" y2="${H - B}" stroke="#111" stroke-dasharray="4 3"/>` +
-        `<text x="${X(x)}" y="${H - B + 34}" text-anchor="middle" font-weight="600">${name}</text>`;
+      g += `<line x1="${X(x)}" x2="${X(x)}" y1="${T}" y2="${H - B}" style="stroke:var(--ash-2)" stroke-dasharray="4 3"/>` +
+        `<text x="${X(x)}" y="${H - B + 34}" text-anchor="middle" font-weight="650" style="fill:var(--ash)">${name}</text>`;
     }
-    const line = (k, colour) => `<polyline fill="none" stroke="${colour}" stroke-width="2" points="${d.map((x, i) => `${X(x)},${Y(pts[i][k])}`).join(" ")}"/>` +
-      d.map((x, i) => `<circle cx="${X(x)}" cy="${Y(pts[i][k])}" r="3.2" fill="${colour}"/>`).join("");
-    g += line(1, "#111") + line(0, "#c81e1e");
+    const line = (k, colour) => `<polyline fill="none" style="stroke:${colour}" stroke-width="2.2" points="${d.map((x, i) => `${X(x)},${Y(pts[i][k])}`).join(" ")}"/>` +
+      d.map((x, i) => `<circle cx="${X(x)}" cy="${Y(pts[i][k])}" r="3.4" style="fill:${colour}"/>`).join("");
+    g += line(1, "var(--ash)") + line(0, "var(--red)");
     $("series").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${P} change since the baseline pass for burned and unburned cells, by date">${g}</svg>`;
     $("series-title").textContent = `${P} over the season: median change in dB since ${fmt(t.baseline)}`;
   }
@@ -197,7 +198,7 @@
     $("pass-rule").textContent = `A usable look, by a rule fixed before counting: the pass covers at least ${pct(rule.min_coverage)} of the window ` +
       `and the optical product's own cloud mask calls less than ${pct(rule.max_cloud)} of it cloud. Landsat 8, Landsat 9 and Sentinel-2, ` +
       `every pass from ${fmt(all.period[0])} to ${fmt(all.period[1])}. Same-day Landsat and Sentinel-2 passes count separately. ` +
-      `Bold dates with a dark frame are usable looks. Faded images are passes that covered only part of the window; they are not counted. ` +
+      `Bold dates with a light frame are usable looks. Faded images are passes that covered only part of the window; they are not counted. ` +
       `Nothing is masked in these images.`;
     box.textContent = "";
     for (const per of info.periods) {
@@ -350,6 +351,40 @@
 
   $("scale-note").textContent = "Each image is about 22 km across, north up. Dates are UTC. Brighter means a stronger radar echo.";
   state.tr = win().tracks["125"] ? "125" : Object.keys(win().tracks)[0];
+
+  /* The claim under the title, from the peak period of the first window, so it cannot drift from the counts. */
+  (function claim() {
+    const info = win().passes; if (!info) return;
+    const pk = info.periods[info.periods.length - 1];
+    const WORDS = ["no", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"];
+    const FULL = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+    const long = (s) => { const p = s.split("-"); return `${+p[2]} ${FULL[+p[1] - 1]}`; };
+    const u = WORDS[pk.usable] || String(pk.usable);
+    const radar = pk.radar_ok === pk.radar ? `all ${pk.radar} of its passes` : `${pk.radar_ok} of its ${pk.radar} passes`;
+    $("claim").textContent = `At the peak of the fires, from ${long(pk.from)} to ${long(pk.to)}, the optical satellites got ${u} usable look${pk.usable === 1 ? "" : "s"} ` +
+      `at these canal blocks in ${pk.optical} passes. The radar returned an image on ${radar}.`;
+  })();
+
+  /* One sweep on arrival: the divider starts at the right edge (all camera) and moves to the middle, uncovering the radar.
+     Skipped for reduced motion, and stopped the moment the visitor touches the viewer. */
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  let sweeping = !reduce;
+  if (sweeping) { $("slide").value = 100; }
   slide();
+  const stop = () => { sweeping = false; };
+  $("viewer").addEventListener("pointerdown", stop, { once: true });
+  $("slide").addEventListener("keydown", stop, { once: true });
   await enter(true);
+  if (sweeping) {
+    try { await Promise.all([imgA.decode(), imgB.decode()]); } catch (e) { /* show it anyway */ }
+    await new Promise((r) => setTimeout(r, 350));
+    const t0 = performance.now(), dur = 1500, from = 100, to = 50;
+    const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    (function frame(now) {
+      if (!sweeping) return;
+      const t = Math.min(1, (now - t0) / dur);
+      $("slide").value = from + (to - from) * ease(t); slide();
+      if (t < 1) requestAnimationFrame(frame); else sweeping = false;
+    })(t0);
+  }
 })();
