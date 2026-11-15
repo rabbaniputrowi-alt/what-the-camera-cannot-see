@@ -21,11 +21,11 @@ with sync_playwright() as p:
     b = p.chromium.launch(channel="msedge", headless=True)
     pg = b.new_page(viewport={"width": 1920, "height": 1080})
     pg.goto("http://127.0.0.1:8765/", wait_until="networkidle")
-    pg.wait_for_timeout(4000)
+    pg.wait_for_timeout(8000)   # the arrival sweep and the overlay draw
+    pg.screenshot(path=str(out / "app_default.png"))   # first screen as a visitor sees it
     pg.click("#preset-fire"); pg.wait_for_timeout(1500); grab(pg, "ov_change_fire.png")
     pg.uncheck("#layer-change"); pg.check("#layer-rule"); pg.wait_for_timeout(1000); grab(pg, "ov_rule_fire.png")
     pg.uncheck("#layer-rule"); pg.check("#layer-opt"); pg.wait_for_timeout(1000); grab(pg, "ov_opt.png")
     pg.uncheck("#layer-opt"); pg.check("#layer-change"); pg.click("#preset-placebo"); pg.wait_for_timeout(1500)
     grab(pg, "ov_change_placebo.png")
-    pg.screenshot(path=str(out / "app_default.png"))
     b.close()
