@@ -15,7 +15,7 @@ the two dates, a fixed detection rule, the VIIRS fire hotspots between the two d
 from Landsat and Sentinel-2. The page scores the radar change against the optical burn map for whichever pair
 is selected, including placebo pairs from before the fire season.
 
-The page is in `docs/` and needs no server code and no external requests. The Python scripts in `pipeline/`
+A seven-slide demo deck is in `docs/deck/` (arrow keys to move). The page is in `docs/` and needs no server code and no external requests. The Python scripts in `pipeline/`
 build every file it reads from open NASA data.
 
 ## What it shows so far

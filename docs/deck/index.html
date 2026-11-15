@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What the camera cannot see: demo deck</title>
+<meta name="description" content="Seven slides: NISAR L-band radar sees the burn scars of Indonesia's 2026 peat fires through the smoke that blinds the camera satellites.">
+<meta name="generator" content="Hand-written HTML. Code drafted with an AI assistant (Claude, Anthropic); see the README, AI use.">
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<main class="deck" id="deck">
+
+<!-- 1. Title -->
+<section class="slide s-title" data-label="Title">
+  <div class="col">
+    <p class="kicker">NASA Space Apps Challenge 2026, Dancing with the SARs</p>
+    <h1>What the camera cannot see</h1>
+    <p class="lede">NISAR radar sees the burn scars of Indonesia's 2026 peat fires through the smoke that blinds the camera satellites.</p>
+    <dl class="meta">
+      <div><dt>By</dt><dd>Rabbani Putrowi, Jakarta local event</dd></div>
+      <div><dt>Try it</dt><dd class="u">rabbaniputrowi-alt.github.io/what-the-camera-cannot-see</dd></div>
+    </dl>
+  </div>
+  <figure class="wipe" aria-label="Radar over Pulang Pisau on 16 July and on 20 October 2026, with the change in red">
+    <img src="img/radar_before.webp" alt="NISAR HV radar, 16 July 2026, before the fires">
+    <div class="wipe-after"><img src="img/radar_after_change.webp" alt="NISAR HV radar, 20 October 2026, red where the echo got weaker"></div>
+    <div class="wipe-line"></div>
+    <span class="tag tag-l">Radar, 16 Jul</span>
+    <span class="tag tag-r">Radar, 20 Oct: red, echo got weaker</span>
+    <figcaption>Pulang Pisau, Central Kalimantan. 22 km across, north up.</figcaption>
+  </figure>
+</section>
+
+<!-- 2. Problem -->
+<section class="slide s-problem" data-label="The problem">
+  <div class="col">
+    <h2>When peat burns, the sky closes.</h2>
+    <ul class="facts">
+      <li><b>160,910</b> VIIRS fire detections in September and October 2026, in a box of about 145 by 165 km around Pulang Pisau, Central Kalimantan.</li>
+      <li>Indonesia's official burned-area map (SiPongi, Ministry of Forestry) is drawn on <b>Landsat images</b> with the hotspots laid over them, then checked on the ground.</li>
+      <li>At the peak of the fires, Landsat could not see the ground. Pictured: the same place, the same day.</li>
+    </ul>
+  </div>
+  <div class="pair">
+    <figure>
+      <div class="frame white"><img src="img/camera_20oct.webp" alt="Landsat true colour, 20 October 2026: all white"></div>
+      <figcaption><b>Camera</b>, Landsat, 20 Oct 2026. The cloud mask calls 100% of it cloud and smoke.</figcaption>
+    </figure>
+    <figure>
+      <div class="frame"><img src="img/radar_20oct.webp" alt="NISAR HV radar, 20 October 2026"></div>
+      <figcaption><b>Radar</b>, NISAR HV, 20 Oct 2026. L-band passes through cloud and smoke.</figcaption>
+    </figure>
+  </div>
+</section>
+
+<!-- 3. The count -->
+<section class="slide s-count" data-label="The count">
+  <h2>At the peak, the camera got <em class="y">1 usable look in 11 passes</em>. The radar got <em class="r">8 of 8</em>.</h2>
+  <div class="strip-block">
+    <p class="strip-label">Camera: every Landsat and Sentinel-2 pass over window 1, 15 Sep to 1 Nov</p>
+    <div class="strip" id="strip-opt"></div>
+  </div>
+  <div class="strip-block">
+    <p class="strip-label">Radar: every NISAR pass over the same window, two orbits</p>
+    <div class="strip" id="strip-rad"></div>
+  </div>
+  <div class="foot2">
+    <p>A usable look covers 90% of the 22 km window, and the satellite's own cloud mask calls less than half of it cloud. The rule was fixed before counting.</p>
+    <p>Across the three central Kalimantan windows: <b>4 of 39</b> camera passes against <b>24 of 24</b> radar passes. Farther from the fire core the camera did better. The page lists every pass in all eight windows.</p>
+  </div>
+</section>
+
+<!-- 4. The solution -->
+<section class="slide s-app" data-label="The solution">
+  <h2>One page. Drag the slider and the scar appears.</h2>
+  <figure class="shot"><img src="img/app.webp" alt="The application: camera and radar on 20 October with the score panel and the season filmstrip"></figure>
+  <ul class="does">
+    <li>Any two radar dates, two orbits, eight places in Indonesia.</li>
+    <li>Layers: radar change, a fixed rule (echo fell by 1 dB or more), VIIRS hotspots, an optical burn map.</li>
+    <li>Every date pair is scored live against the optical map, placebo pairs from before the fires included.</li>
+    <li>A filmstrip of every radar pass with the camera image from the same days, and Play.</li>
+    <li>Static and open: no login, no outside requests, works on a phone.</li>
+  </ul>
+  <p class="url">rabbaniputrowi-alt.github.io/what-the-camera-cannot-see</p>
+</section>
+
+<!-- 5. The proof -->
+<section class="slide s-proof" data-label="The proof">
+  <h2>Before the fires the test reads 0.50. In the fire season it climbs to 0.81.</h2>
+  <figure class="chart">
+    <svg id="curve" viewBox="0 0 1000 560" role="img" aria-label="HV AUC for each date pair in window 1, both orbits"></svg>
+    <figcaption>Window 1, HV channel. Each dot is one date pair, plotted at its later date. Grey: placebo pairs, both before the fires. Red: fire-season pairs, from mid July. AUC is the chance that a burned cell lost more radar echo than an unburned one; 0.50 means no signal. Burned and unburned come from the optical burn map (Landsat and Sentinel-2 dNBR).</figcaption>
+  </figure>
+  <div class="nums">
+    <div><span class="n">95%</span><p>right when the rule flags a cell (946 of 998), 16 Jul to 20 Oct</p></div>
+    <div><span class="n">2.7%</span><p>of unburned cells flagged by mistake</p></div>
+    <div><span class="n">32%</span><p>of burned cells caught. The rule finds the severe core of the burn, not every edge</p></div>
+    <p class="aside">The second orbit looks from the other side: 0.73 in the fire season, placebo pairs 0.46 to 0.50. The 1 dB rule was set before scoring and is not tuned.</p>
+  </div>
+</section>
+
+<!-- 6. Where it works -->
+<section class="slide s-where" data-label="Where it works">
+  <h2>HV sees the burn in Kalimantan's peat. It weakens in Sumatra and fails on Papua's savanna.</h2>
+  <figure class="map">
+    <svg id="map" viewBox="0 0 1152 432" role="img" aria-label="Map of Indonesia with the eight study windows"></svg>
+  </figure>
+  <table class="where">
+    <thead><tr><th></th><th>Place</th><th>Fire season</th><th>Before the fires</th><th>Reading</th></tr></thead>
+    <tbody>
+      <tr class="v-clean"><td><i>1</i></td><td>Pulang Pisau</td><td>0.81</td><td>0.45 to 0.51</td><td>Clean</td></tr>
+      <tr class="v-hold"><td><i>2</i></td><td>50 km north-west</td><td>0.91</td><td>0.45 to 0.77</td><td>Signal, placebo drifts</td></tr>
+      <tr class="v-hold"><td><i>3</i></td><td>Kapuas</td><td>0.79</td><td>0.46 to 0.68</td><td>Signal, placebo drifts</td></tr>
+      <tr class="v-hold"><td><i>4</i></td><td>Kotawaringin Timur</td><td>0.76</td><td>0.34 to 0.64</td><td>Signal, placebo drifts</td></tr>
+      <tr class="v-hold"><td><i>5</i></td><td>Ketapang</td><td>0.81</td><td>0.26 to 0.50</td><td>Signal, placebo drifts</td></tr>
+      <tr class="v-weak"><td><i>6</i></td><td>Ogan Komering Ilir</td><td>0.68</td><td>0.33 to 0.50</td><td>Weak</td></tr>
+      <tr class="v-weak"><td><i>7</i></td><td>Bayung Lencir</td><td>0.76</td><td>0.31 to 0.63</td><td>Weak, rule right 23 to 37%</td></tr>
+      <tr class="v-fail"><td><i>8</i></td><td>Merauke (savanna)</td><td>0.65</td><td>0.07 to 0.28</td><td>Fails</td></tr>
+    </tbody>
+  </table>
+  <p class="tnote">HV AUC on the better orbit for the fire-season pair, and the range over the placebo pairs on both orbits. 0.50 means no signal.</p>
+  <p class="hh"><b>The challenge asks which polarization shows the change.</b> HV, the cross-polarized channel. HH never rises above its own placebo range in any of the eight windows.</p>
+</section>
+
+<!-- 7. Next and data -->
+<section class="slide s-next" data-label="What's next">
+  <div class="col">
+    <h2>Next: every pass, every peat district.</h2>
+    <ol class="next">
+      <li><b>Scale out.</b> The pipeline streams small windows from each NISAR scene without downloading it. Run it over every peat district, every 12 days.</li>
+      <li><b>Earn the rule.</b> Test the 1 dB rule on places it has never seen, and add proper speckle filtering, before anyone relies on it.</li>
+      <li><b>Hand it over.</b> Give SiPongi's burned-area mappers a radar layer for the weeks when Landsat sees only smoke.</li>
+    </ol>
+    <p class="limits">Limits, stated on the page: eight 22 km windows, one fire season, mostly provisional radar data. It is not a burned-area product, and radar change alone is not proof of fire.</p>
+  </div>
+  <div class="col data">
+    <h3>Built only on open data</h3>
+    <ul>
+      <li><b>NISAR L2 GCOV</b>, L-band HH and HV, NASA and ISRO, from the Alaska Satellite Facility DAAC</li>
+      <li><b>VIIRS active fires</b>, 375 m, NASA FIRMS</li>
+      <li><b>HLS v2.0</b>, Landsat and Sentinel-2 surface reflectance, NASA LP DAAC</li>
+    </ul>
+    <h3>Open source</h3>
+    <p>MIT licence. Rebuild steps and every reference in the repository:<br>github.com/rabbaniputrowi-alt/what-the-camera-cannot-see</p>
+    <p class="ai" id="ai-line">AI use: the code and drafts of the text were written with an AI assistant (Claude, Anthropic), directed and checked by Rabbani. Details in the README.</p>
+    <p class="ai">Not endorsed by NASA. No NASA logos or mission identifiers are used.</p>
+  </div>
+</section>
+
+</main>
+
+<nav class="nav" aria-label="Slides">
+  <button type="button" id="prev" aria-label="Previous slide">&#8592;</button>
+  <span id="count" aria-live="polite"></span>
+  <button type="button" id="next" aria-label="Next slide">&#8594;</button>
+</nav>
+<script src="deck.js"></script>
+</body>
+</html>

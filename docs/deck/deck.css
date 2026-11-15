@@ -1,0 +1,158 @@
+/* Demo deck. Same colours and typeface as the application (the Space Apps site's own palette).
+   Fixed 1920 x 1080 slides scaled to the window. No outside requests. */
+@font-face { font-family: "Fira Sans"; src: url("../fonts/firasans-Regular.woff2") format("woff2"); font-weight: 400; font-display: swap; }
+@font-face { font-family: "Fira Sans"; src: url("../fonts/firasans-SemiBold.woff2") format("woff2"); font-weight: 600; font-display: swap; }
+@font-face { font-family: "Fira Sans"; src: url("../fonts/firasans-ExtraBold.woff2") format("woff2"); font-weight: 800; font-display: swap; }
+
+:root {
+  --bg: #151622; --bg-2: #1d1f31; --bg-3: #282b45; --line: #2f3352; --line-2: #4a4f75;
+  --ink: #ffffff; --ink-2: #dfe1e2; --ink-3: #9a9fa6;
+  --blue: #0050d8; --blue-2: #2491ff; --yellow: #e7f434; --red: #e52207; --red-ink: #ff8266;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #0d0e16; overflow: hidden; }
+body { font-family: "Fira Sans", system-ui, "Segoe UI", Roboto, Arial, sans-serif; color: var(--ink); -webkit-font-smoothing: antialiased; }
+b { font-weight: 600; }
+h1, h2, h3, p, ul, ol, figure, dl, dd { margin: 0; }
+img { display: block; }
+
+.deck { position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px; transform-origin: 0 0; }
+.slide {
+  position: absolute; inset: 0; background: var(--bg); padding: 96px 120px 110px;
+  display: none; font-size: 30px; line-height: 1.4; color: var(--ink-2);
+}
+.slide.on { display: grid; }
+.slide::after {   /* running footer */
+  content: "What the camera cannot see"; position: absolute; left: 120px; bottom: 44px;
+  font-size: 20px; color: var(--ink-3); letter-spacing: .01em;
+}
+.slide .pg { position: absolute; left: 430px; bottom: 44px; font-size: 20px; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+h2 { font-size: 60px; font-weight: 800; line-height: 1.12; color: var(--ink); letter-spacing: -.01em; text-wrap: balance; }
+h3 { font-size: 26px; font-weight: 600; color: var(--ink-3); text-transform: uppercase; letter-spacing: .08em; margin-bottom: 14px; }
+em { font-style: normal; }
+em.y { color: var(--yellow); }
+em.r { color: var(--red-ink); }
+
+/* 1. Title */
+.s-title { grid-template-columns: 1fr 820px; gap: 100px; align-items: center; }
+.kicker { font-size: 26px; color: var(--blue-2); font-weight: 600; margin-bottom: 28px; }
+h1 { font-size: 118px; font-weight: 800; line-height: 1.0; color: var(--ink); letter-spacing: -.02em; margin-bottom: 40px; }
+.lede { font-size: 38px; line-height: 1.32; color: var(--ink-2); max-width: 820px; margin-bottom: 64px; }
+.meta { display: grid; gap: 14px; font-size: 26px; }
+.meta div { display: grid; grid-template-columns: 110px 1fr; }
+.meta dt { color: var(--ink-3); }
+.meta dd { color: var(--ink); white-space: nowrap; }
+.meta dd.u { font-size: 23px; color: var(--yellow); }
+.wipe { position: relative; width: 820px; height: 820px; border: 1px solid var(--line-2); }
+.wipe img { width: 820px; height: 820px; }
+.wipe-after { position: absolute; inset: 0; clip-path: inset(0 0 0 var(--cut, 50%)); }
+.wipe-line { position: absolute; top: 0; bottom: 0; left: var(--cut, 50%); width: 3px; margin-left: -1px; background: var(--yellow); }
+.tag { position: absolute; top: 16px; padding: 6px 12px; background: rgba(21, 22, 34, .88); font-size: 20px; color: var(--ink); border-radius: 4px; }
+.tag-l { left: 16px; }
+.tag-r { right: 16px; }
+.wipe figcaption { position: absolute; left: 0; top: 100%; margin-top: 14px; font-size: 20px; color: var(--ink-3); }
+
+/* 2. Problem */
+.s-problem { grid-template-columns: 1fr 1060px; gap: 90px; align-items: center; }
+.s-problem h2 { margin-bottom: 48px; }
+.facts { padding: 0; list-style: none; display: grid; gap: 30px; }
+.facts li { padding-left: 28px; position: relative; }
+.facts li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 10px; background: var(--red); }
+.facts b { color: var(--ink); }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+.frame { width: 516px; height: 516px; border: 1px solid var(--line-2); overflow: hidden; }
+.frame img { width: 100%; height: 100%; }
+.frame.white { border-color: var(--yellow); }
+.pair figcaption { margin-top: 16px; font-size: 22px; line-height: 1.35; color: var(--ink-3); }
+.pair figcaption b { color: var(--ink); }
+
+/* 3. Count */
+.s-count { grid-template-rows: auto auto auto auto; gap: 40px; align-content: start; }
+.s-count h2 { font-size: 56px; max-width: 1600px; }
+.strip-label { font-size: 22px; color: var(--ink-3); margin-bottom: 10px; }
+.strip { display: flex; gap: 10px; }
+.strip .t { width: 140px; flex: none; }
+.strip .t img { width: 140px; height: 140px; border: 1px solid var(--line); }
+.strip .t span { display: block; font-size: 17px; color: var(--ink-3); margin-top: 6px; white-space: nowrap; }
+.strip .t.ok img { outline: 4px solid var(--yellow); outline-offset: -2px; }
+.strip .t.ok span { color: var(--yellow); font-weight: 600; }
+.foot2 { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; font-size: 23px; color: var(--ink-3); margin-top: 26px; }
+.foot2 b { color: var(--ink); }
+
+/* 4. App */
+.s-app { grid-template-columns: 1180px 1fr; grid-template-rows: auto auto auto; column-gap: 70px; row-gap: 34px; align-content: start; }
+.s-app h2 { grid-column: 1 / -1; }
+.shot { grid-row: 2; align-self: start; }
+.shot img { width: 1180px; height: auto; border: 1px solid var(--line-2); }
+.does { padding: 0; list-style: none; display: grid; gap: 22px; font-size: 27px; align-content: start; }
+.does li { padding-left: 26px; position: relative; }
+.does li::before { content: ""; position: absolute; left: 0; top: .55em; width: 10px; height: 10px; background: var(--blue-2); }
+.url { grid-column: 1 / -1; font-size: 26px; color: var(--yellow); font-weight: 600; }
+
+/* 5. Proof */
+.s-proof { grid-template-columns: 1000px 1fr; grid-template-rows: auto 1fr; column-gap: 90px; row-gap: 36px; }
+.s-proof h2 { grid-column: 1 / -1; font-size: 56px; }
+.chart svg { width: 1000px; height: 560px; display: block; }
+.chart figcaption { margin-top: 14px; font-size: 19px; line-height: 1.4; color: var(--ink-3); }
+.chart text { font-family: "Fira Sans", sans-serif; }
+.nums { display: grid; gap: 30px; align-content: start; }
+.nums .n { display: block; font-size: 84px; font-weight: 800; line-height: 1; color: var(--ink); font-variant-numeric: tabular-nums; }
+.nums p { font-size: 25px; color: var(--ink-2); margin-top: 6px; }
+.nums .aside { font-size: 21px; color: var(--ink-3); border-top: 1px solid var(--line); padding-top: 18px; }
+
+/* 6. Where */
+.s-where { grid-template-columns: 740px 1fr; grid-template-rows: auto 1fr auto; column-gap: 56px; row-gap: 30px; align-content: start; }
+.s-where h2 { grid-column: 1 / -1; font-size: 52px; }
+.map { align-self: center; }
+.map svg { width: 740px; height: auto; display: block; }
+.map text { font-family: "Fira Sans", sans-serif; }
+table.where { border-collapse: collapse; font-size: 23px; align-self: center; width: 100%; }
+.where th { text-align: left; font-weight: 400; color: var(--ink-3); font-size: 18px; padding: 0 12px 10px 0; border-bottom: 1px solid var(--line-2); }
+.where td { white-space: nowrap; padding: 10px 14px 10px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.where td i { font-style: normal; display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; font-size: 18px; font-weight: 600; }
+.v-clean i { background: var(--yellow); color: #151622; }
+.v-hold i { background: var(--blue-2); color: #fff; }
+.v-weak i { border: 2px solid var(--ink-3); color: var(--ink-2); }
+.v-fail i { border: 2px solid var(--red-ink); color: var(--red-ink); }
+.v-clean td:last-child { color: var(--yellow); font-weight: 600; }
+.v-fail td:last-child { color: var(--red-ink); font-weight: 600; }
+.hh { grid-column: 1 / -1; font-size: 26px; color: var(--ink-2); }
+.hh b { color: var(--ink); }
+
+/* 7. Next */
+.s-next { grid-template-columns: 1fr 700px; gap: 110px; align-items: start; align-content: center; }
+.s-next h2 { margin-bottom: 46px; }
+.next { padding-left: 0; list-style: none; counter-reset: n; display: grid; gap: 30px; }
+.next li { counter-increment: n; padding-left: 64px; position: relative; }
+.next li::before { content: counter(n); position: absolute; left: 0; top: 0; font-size: 40px; font-weight: 800; color: var(--blue-2); line-height: 1.05; }
+.next b { color: var(--ink); }
+.limits { margin-top: 44px; font-size: 22px; color: var(--ink-3); max-width: 900px; }
+.data { padding-top: 14px; font-size: 24px; }
+.data ul { padding: 0; list-style: none; display: grid; gap: 14px; margin-bottom: 40px; }
+.data b { color: var(--ink); }
+.data p { margin-bottom: 18px; }
+.data .ai { font-size: 19px; color: var(--ink-3); }
+
+/* Navigation */
+.nav { position: fixed; right: 14px; bottom: 12px; display: flex; align-items: center; gap: 8px; font: 14px "Fira Sans", sans-serif; color: var(--ink-3); z-index: 5; }
+.nav button { font: inherit; font-size: 18px; width: 44px; height: 44px; border: 1px solid var(--line-2); border-radius: 6px; background: var(--bg-2); color: var(--ink); cursor: pointer; }
+.nav button:hover { border-color: var(--blue-2); }
+.nav button:focus-visible { outline: 2px solid var(--yellow); outline-offset: 2px; }
+#count { min-width: 44px; text-align: center; font-variant-numeric: tabular-nums; }
+
+@media (prefers-reduced-motion: reduce) { .wipe { --cut: 50%; } }
+
+@media print {
+  @page { size: 1920px 1080px; margin: 0; }
+  html, body { overflow: visible; height: auto; background: var(--bg); }
+  .deck { position: static; transform: none !important; width: 1920px; height: auto; }
+  .slide { position: relative; display: grid !important; width: 1920px; height: 1080px; break-after: page; }
+  .nav { display: none; }
+}
+
+/* slide 6 placement */
+.s-where { grid-template-rows: auto auto auto auto; }
+.s-where .map { grid-column: 1; grid-row: 2 / 4; }
+.s-where table.where { grid-column: 2; grid-row: 2; }
+.s-where .tnote { grid-column: 2; grid-row: 3; font-size: 19px; color: var(--ink-3); }
+.s-where .hh { grid-row: 4; margin-top: 10px; }

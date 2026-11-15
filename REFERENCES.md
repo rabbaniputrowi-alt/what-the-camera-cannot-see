@@ -28,11 +28,14 @@ AI tools are described in the README under "AI use".
 - NASA FIRMS FAQ (what a detection is, sensors and latency): https://www.earthdata.nasa.gov/data/tools/firms/faq
 - Indonesian Ministry of Forestry press release, 8 Nov 2026 (hotspot counts are not burned area; peat fires in Pulang Pisau still being fought): https://www.kehutanan.go.id/news/hotspot-nasional-naik-jadi-165-titik-kalteng-kembali-jadi-fokus-penanganan
 
+- Indonesian Ministry of Forestry, SiPongi, "Indikasi Luas Kebakaran" (how the official burned area is computed: Landsat 8 images overlaid with hotspots, plus ground checks and Manggala Agni reports), read 15 Nov 2026: https://sipongi.gakkum.kehutanan.go.id/indikasi-luas-kebakaran
+
 ## Software
 
 Python: asf_search, h5py, fsspec, aiohttp, numpy, pandas, scipy, rasterio (GDAL, PROJ), pyproj, Pillow, requests, python-dotenv, managed with uv.
 Checks: Node.js for the scoring check, Playwright with Microsoft Edge for page captures.
 The page itself is plain HTML, CSS and JavaScript with no libraries and no external requests.
+Demo deck (`docs/deck/`): same stack, images made by `pipeline/build_deck.py`; the coastline on its map slide is Natural Earth 1:50m land (public domain), https://www.naturalearthdata.com/, simplified by `pipeline/deck_map.py`.
 
 ## Challenge
 

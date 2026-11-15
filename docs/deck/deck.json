@@ -1,0 +1,501 @@
+{
+ "strip": {
+  "optical": [
+   {
+    "date": "2026-09-16",
+    "sensor": "Sentinel-2",
+    "usable": false,
+    "cloud": 0.84,
+    "img": "img/pass_w1_2026-09-16_S.webp"
+   },
+   {
+    "date": "2026-09-18",
+    "sensor": "Landsat",
+    "usable": false,
+    "cloud": 0.94,
+    "img": "img/pass_w1_2026-09-18_L.webp"
+   },
+   {
+    "date": "2026-09-18",
+    "sensor": "Sentinel-2",
+    "usable": false,
+    "cloud": 0.81,
+    "img": "img/pass_w1_2026-09-18_S.webp"
+   },
+   {
+    "date": "2026-09-21",
+    "sensor": "Sentinel-2",
+    "usable": false,
+    "cloud": 1.0,
+    "img": "img/pass_w1_2026-09-21_S.webp"
+   },
+   {
+    "date": "2026-09-26",
+    "sensor": "Landsat",
+    "usable": false,
+    "cloud": 0.95,
+    "img": "img/pass_w1_2026-09-26_L.webp"
+   },
+   {
+    "date": "2026-10-04",
+    "sensor": "Landsat",
+    "usable": true,
+    "cloud": 0.18,
+    "img": "img/pass_w1_2026-10-04_L.webp"
+   },
+   {
+    "date": "2026-10-08",
+    "sensor": "Sentinel-2",
+    "usable": false,
+    "cloud": 0.95,
+    "img": "img/pass_w1_2026-10-08_S.webp"
+   },
+   {
+    "date": "2026-10-12",
+    "sensor": "Landsat",
+    "usable": false,
+    "cloud": 0.99,
+    "img": "img/pass_w1_2026-10-12_L.webp"
+   },
+   {
+    "date": "2026-10-20",
+    "sensor": "Landsat",
+    "usable": false,
+    "cloud": 1.0,
+    "img": "img/pass_w1_2026-10-20_L.webp"
+   },
+   {
+    "date": "2026-10-28",
+    "sensor": "Landsat",
+    "usable": false,
+    "cloud": 1.0,
+    "img": "img/pass_w1_2026-10-28_L.webp"
+   },
+   {
+    "date": "2026-10-31",
+    "sensor": "Sentinel-2",
+    "usable": false,
+    "cloud": 0.94,
+    "img": "img/pass_w1_2026-10-31_S.webp"
+   }
+  ],
+  "radar": [
+   {
+    "date": "2026-09-22",
+    "track": 61,
+    "img": "img/rpass_61_2026-09-22.webp"
+   },
+   {
+    "date": "2026-09-26",
+    "track": 125,
+    "img": "img/rpass_125_2026-09-26.webp"
+   },
+   {
+    "date": "2026-10-04",
+    "track": 61,
+    "img": "img/rpass_61_2026-10-04.webp"
+   },
+   {
+    "date": "2026-10-08",
+    "track": 125,
+    "img": "img/rpass_125_2026-10-08.webp"
+   },
+   {
+    "date": "2026-10-16",
+    "track": 61,
+    "img": "img/rpass_61_2026-10-16.webp"
+   },
+   {
+    "date": "2026-10-20",
+    "track": 125,
+    "img": "img/rpass_125_2026-10-20.webp"
+   },
+   {
+    "date": "2026-10-28",
+    "track": 61,
+    "img": "img/rpass_61_2026-10-28.webp"
+   },
+   {
+    "date": "2026-11-01",
+    "track": 125,
+    "img": "img/rpass_125_2026-11-01.webp"
+   }
+  ]
+ },
+ "curve": {
+  "125": [
+   {
+    "to": "2026-07-04",
+    "from": "2026-06-22",
+    "kind": "placebo",
+    "hv": 0.511
+   },
+   {
+    "to": "2026-07-16",
+    "from": "2026-07-04",
+    "kind": "placebo",
+    "hv": 0.449
+   },
+   {
+    "to": "2026-08-21",
+    "from": "2026-07-16",
+    "kind": "fire",
+    "hv": 0.565
+   },
+   {
+    "to": "2026-09-02",
+    "from": "2026-07-16",
+    "kind": "fire",
+    "hv": 0.588
+   },
+   {
+    "to": "2026-09-14",
+    "from": "2026-07-16",
+    "kind": "fire",
+    "hv": 0.593
+   },
+   {
+    "to": "2026-09-26",
+    "from": "2026-07-16",
+    "kind": "fire",
+    "hv": 0.716
+   },
+   {
+    "to": "2026-10-08",
+    "from": "2026-07-16",
+    "kind": "fire",
+    "hv": 0.768
+   },
+   {
+    "to": "2026-10-20",
+    "from": "2026-07-16",
+    "kind": "fire",
+    "hv": 0.814
+   },
+   {
+    "to": "2026-11-01",
+    "from": "2026-07-16",
+    "kind": "fire",
+    "hv": 0.764
+   }
+  ],
+  "61": [
+   {
+    "to": "2026-06-30",
+    "from": "2026-06-18",
+    "kind": "placebo",
+    "hv": 0.5
+   },
+   {
+    "to": "2026-07-12",
+    "from": "2026-06-30",
+    "kind": "placebo",
+    "hv": 0.464
+   },
+   {
+    "to": "2026-07-24",
+    "from": "2026-07-12",
+    "kind": "placebo",
+    "hv": 0.491
+   },
+   {
+    "to": "2026-08-17",
+    "from": "2026-07-24",
+    "kind": "fire",
+    "hv": 0.573
+   },
+   {
+    "to": "2026-08-29",
+    "from": "2026-07-24",
+    "kind": "fire",
+    "hv": 0.588
+   },
+   {
+    "to": "2026-09-10",
+    "from": "2026-07-24",
+    "kind": "fire",
+    "hv": 0.579
+   },
+   {
+    "to": "2026-09-22",
+    "from": "2026-07-24",
+    "kind": "fire",
+    "hv": 0.591
+   },
+   {
+    "to": "2026-10-04",
+    "from": "2026-07-24",
+    "kind": "fire",
+    "hv": 0.607
+   },
+   {
+    "to": "2026-10-16",
+    "from": "2026-07-24",
+    "kind": "fire",
+    "hv": 0.73
+   },
+   {
+    "to": "2026-10-28",
+    "from": "2026-07-24",
+    "kind": "fire",
+    "hv": 0.703
+   }
+  ]
+ },
+ "summary": [
+  {
+   "key": "w1_125",
+   "window": "w1",
+   "track": 125,
+   "placebo": [
+    0.51,
+    0.45
+   ],
+   "fire_max": 0.81,
+   "hh_fire_max": 0.62
+  },
+  {
+   "key": "w1_61",
+   "window": "w1",
+   "track": 61,
+   "placebo": [
+    0.5,
+    0.46,
+    0.49
+   ],
+   "fire_max": 0.73,
+   "hh_fire_max": 0.61
+  },
+  {
+   "key": "w2_125",
+   "window": "w2",
+   "track": 125,
+   "placebo": [
+    0.45,
+    0.71
+   ],
+   "fire_max": 0.93,
+   "hh_fire_max": 0.67
+  },
+  {
+   "key": "w2_61",
+   "window": "w2",
+   "track": 61,
+   "placebo": [
+    0.77,
+    0.7,
+    0.61
+   ],
+   "fire_max": 0.88,
+   "hh_fire_max": 0.6
+  },
+  {
+   "key": "w3_125",
+   "window": "w3",
+   "track": 125,
+   "placebo": [
+    0.51,
+    0.57
+   ],
+   "fire_max": 0.93,
+   "hh_fire_max": 0.72
+  },
+  {
+   "key": "w3_61",
+   "window": "w3",
+   "track": 61,
+   "placebo": [
+    0.68,
+    0.46,
+    0.52
+   ],
+   "fire_max": 0.91,
+   "hh_fire_max": 0.64
+  },
+  {
+   "key": "w4_125",
+   "window": "w4",
+   "track": 125,
+   "placebo": [
+    0.41,
+    0.34
+   ],
+   "fire_max": 0.84,
+   "hh_fire_max": 0.54
+  },
+  {
+   "key": "w4_61",
+   "window": "w4",
+   "track": 61,
+   "placebo": [
+    0.64,
+    0.48,
+    0.49
+   ],
+   "fire_max": 0.74,
+   "hh_fire_max": 0.28
+  },
+  {
+   "key": "w5_155",
+   "window": "w5",
+   "track": 155,
+   "placebo": [
+    0.47,
+    0.33
+   ],
+   "fire_max": 0.78,
+   "hh_fire_max": 0.43
+  },
+  {
+   "key": "w5_90",
+   "window": "w5",
+   "track": 90,
+   "placebo": [
+    0.35,
+    0.26,
+    0.5
+   ],
+   "fire_max": 0.93,
+   "hh_fire_max": 0.7
+  },
+  {
+   "key": "w6_10",
+   "window": "w6",
+   "track": 10,
+   "placebo": [
+    0.45,
+    0.5
+   ],
+   "fire_max": 0.68,
+   "hh_fire_max": 0.56
+  },
+  {
+   "key": "w6_119",
+   "window": "w6",
+   "track": 119,
+   "placebo": [
+    0.33,
+    0.39
+   ],
+   "fire_max": 0.68,
+   "hh_fire_max": 0.53
+  },
+  {
+   "key": "w7_112",
+   "window": "w7",
+   "track": 112,
+   "placebo": [
+    0.49,
+    0.31
+   ],
+   "fire_max": 0.84,
+   "hh_fire_max": 0.47
+  },
+  {
+   "key": "w7_47",
+   "window": "w7",
+   "track": 47,
+   "placebo": [
+    0.63,
+    0.32,
+    0.41
+   ],
+   "fire_max": 0.8,
+   "hh_fire_max": 0.51
+  },
+  {
+   "key": "w8_124",
+   "window": "w8",
+   "track": 124,
+   "placebo": [
+    0.28
+   ],
+   "fire_max": 0.61,
+   "hh_fire_max": 0.51
+  },
+  {
+   "key": "w8_132",
+   "window": "w8",
+   "track": 132,
+   "placebo": [
+    0.07
+   ],
+   "fire_max": 0.65,
+   "hh_fire_max": 0.4
+  }
+ ],
+ "windows": {
+  "w1": {
+   "label": "Window 1, Pulang Pisau canal blocks",
+   "bbox": [
+    113.95,
+    -2.85,
+    114.15,
+    -2.65
+   ]
+  },
+  "w2": {
+   "label": "Window 2, 50 km north-west",
+   "bbox": [
+    113.7,
+    -2.4,
+    113.9,
+    -2.2
+   ]
+  },
+  "w3": {
+   "label": "Window 3, Kapuas, 50 km north-east",
+   "bbox": [
+    114.3,
+    -2.55,
+    114.5,
+    -2.35
+   ]
+  },
+  "w4": {
+   "label": "Window 4, Kotawaringin Timur, 130 km west",
+   "bbox": [
+    112.8,
+    -2.95,
+    113.0,
+    -2.75
+   ]
+  },
+  "w5": {
+   "label": "Window 5, Ketapang, West Kalimantan",
+   "bbox": [
+    110.1,
+    -1.9,
+    110.3,
+    -1.7
+   ]
+  },
+  "w6": {
+   "label": "Window 6, Ogan Komering Ilir, South Sumatra",
+   "bbox": [
+    105.1,
+    -3.45,
+    105.3,
+    -3.25
+   ]
+  },
+  "w7": {
+   "label": "Window 7, Bayung Lencir, South Sumatra and Jambi border",
+   "bbox": [
+    103.8,
+    -1.95,
+    104.0,
+    -1.75
+   ]
+  },
+  "w8": {
+   "label": "Window 8, Merauke, South Papua (savanna, not peat)",
+   "bbox": [
+    140.55,
+    -7.95,
+    140.75,
+    -7.75
+   ]
+  }
+ }
+}
