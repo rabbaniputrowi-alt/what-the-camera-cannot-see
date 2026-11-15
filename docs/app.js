@@ -134,7 +134,7 @@
     const short = (s) => { const p = s.split("-"); return `${+p[2]} ${MONTHS[+p[1] - 1]}`; };
     let g = "";
     for (let v = lo; v <= hi + 1e-9; v += 0.5) {
-      g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:${v === 0 ? "var(--ash-3)" : "var(--line)"}"/>` +
+      g += `<line x1="${L}" x2="${W - R}" y1="${Y(v)}" y2="${Y(v)}" style="stroke:${v === 0 ? "var(--ink-3)" : "var(--line)"}"/>` +
         `<text x="${L - 6}" y="${Y(v) + 4}" text-anchor="end">${v > 0 ? "+" : ""}${v.toFixed(1)}</text>`;
     }
     d.forEach((x, i) => {
@@ -147,12 +147,12 @@
       g += `<text x="${X(x)}" y="${H - B + 18}" text-anchor="middle">${short(x)}</text>`;
     });
     for (const [x, name] of [[state.a, "before"], [state.b, "after"]]) {
-      g += `<line x1="${X(x)}" x2="${X(x)}" y1="${T}" y2="${H - B}" style="stroke:var(--ash-2)" stroke-dasharray="4 3"/>` +
-        `<text x="${X(x)}" y="${H - B + 34}" text-anchor="middle" font-weight="650" style="fill:var(--ash)">${name}</text>`;
+      g += `<line x1="${X(x)}" x2="${X(x)}" y1="${T}" y2="${H - B}" style="stroke:var(--ink-2)" stroke-dasharray="4 3"/>` +
+        `<text x="${X(x)}" y="${H - B + 34}" text-anchor="middle" font-weight="650" style="fill:var(--ink)">${name}</text>`;
     }
     const line = (k, colour) => `<polyline fill="none" style="stroke:${colour}" stroke-width="2.2" points="${d.map((x, i) => `${X(x)},${Y(pts[i][k])}`).join(" ")}"/>` +
       d.map((x, i) => `<circle cx="${X(x)}" cy="${Y(pts[i][k])}" r="3.4" style="fill:${colour}"/>`).join("");
-    g += line(1, "var(--ash)") + line(0, "var(--red)");
+    g += line(1, "var(--ink)") + line(0, "var(--red)");
     $("series").innerHTML = `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${P} change since the baseline pass for burned and unburned cells, by date">${g}</svg>`;
     $("series-title").textContent = `${P} over the season: median change in dB since ${fmt(t.baseline)}`;
   }
@@ -252,51 +252,28 @@
       b.setAttribute("aria-pressed", String(b.dataset.date === state.b && b.dataset.track === state.tr));
   }
 
-  /* ---------- season timeline: fires, every optical pass, every radar pass of this track ---------- */
-  const dayN = (s) => Date.parse(s + "T00:00:00Z") / 864e5;
-  let span = null;
-  const xp = (d) => ((dayN(d) - span[0]) / (span[1] - span[0])) * 100;
+  /* ---------- filmstrip: one tile per radar pass of this orbit, camera image beside the radar image ---------- */
   function buildTimeline() {
-    const all = cache.passes[state.w], info = win().passes, d = trk().dates;
-    span = all ? [dayN(all.period[0]), dayN(all.period[1])] : [dayN(d[0]) - 3, dayN(d[d.length - 1]) + 3];
-    // period bands with their camera counts
-    const pb = $("t-periods"); pb.textContent = "";
-    if (info) for (const per of info.periods) {
-      const el = document.createElement("div"); el.className = "pband" + (per === info.periods[info.periods.length - 1] ? " peak" : "");
-      el.style.left = xp(per.from) + "%"; el.style.width = (xp(per.to) - xp(per.from)) + "%";
-      el.innerHTML = `<span class="plab">${per.label}<span>: camera <b>${per.usable}</b> of ${per.optical}, radar <b>${per.radar_ok}</b> of ${per.radar}</span></span>`;
-      pb.appendChild(el);
-    }
-    const sel = document.createElement("div"); sel.className = "sel"; sel.id = "t-sel"; pb.appendChild(sel);
-    // weekly VIIRS detections inside the window
-    const wk = 7, bins = Math.ceil((span[1] - span[0]) / wk), c = new Array(bins).fill(0);
-    for (const q of hot) { const k = Math.floor((dayN(q[2]) - span[0]) / wk); if (k >= 0 && k < bins) c[k]++; }
-    const top = Math.max(1, ...c);
-    $("t-hist").setAttribute("viewBox", `0 0 ${bins} 1`);
-    $("t-hist").innerHTML = c.map((v, k) => v ? `<rect x="${k + 0.08}" y="${1 - v / top}" width="0.84" height="${v / top}"><title>${num(v)} detections</title></rect>` : "").join("");
-    // camera lane
-    const cam = $("t-cam"); cam.textContent = "";
-    if (all) {
-      const perDay = {};
-      for (const q of all.passes) (perDay[q.date] = perDay[q.date] || []).push(q);
-      for (const [date, list] of Object.entries(perDay)) list.forEach((q, i) => {
-        const b = document.createElement("button"); b.type = "button";
-        b.className = "om" + (q.usable ? " usable" : "") + (q.coverage < all.rule.min_coverage ? " partial" : "") + (list.length > 1 ? " stack" + (i ? "" : "0") : "");
-        b.style.left = xp(date) + "%";
-        const what = q.cloud === undefined ? "no data over the window" : `${pct(q.cloud)} cloud by its own mask`;
-        b.dataset.tip = `<b>${q.sensor}, ${fmt(date)}</b><br>${q.usable ? "Usable look. " : ""}${what}${q.coverage < all.rule.min_coverage ? `, covers ${pct(q.coverage)} of the window` : ""}`;
-        if (q.file) b.dataset.img = D + q.file;
-        b.setAttribute("aria-label", `${q.sensor}, ${fmt(date)}: ${q.usable ? "usable look" : what}`);
-        cam.appendChild(b);
-      });
-    }
-    // radar lane: this track's passes, select to make it the after date
-    const rad = $("t-rad"); rad.textContent = "";
-    for (const date of d) {
-      const b = document.createElement("button"); b.type = "button"; b.className = "rm"; b.dataset.date = date;
-      b.style.left = xp(date) + "%";
-      b.setAttribute("aria-label", `NISAR pass ${fmt(date)}, track ${state.tr}`);
-      b.title = `NISAR ${fmt(date)}, track ${state.tr}. Select to compare with it.`;
+    const info = win().passes, d = trk().dates, film = $("film"), cams = win().camera || {};
+    const thumbs = {};
+    if (info) for (const r of info.radar) if (r.track === state.tr) thumbs[r.date] = D + r.file;
+    const cnt = $("t-counts"); cnt.textContent = "";
+    if (info) info.periods.forEach((per, i) => {
+      const el = document.createElement("span");
+      if (i === info.periods.length - 1) el.className = "peak";
+      el.innerHTML = `${per.label} (${short(per.from)} to ${short(per.to)}): camera <b>${per.usable}</b> usable of ${per.optical}, radar <b>${per.radar_ok}</b> of ${per.radar}`;
+      cnt.appendChild(el);
+    });
+    film.textContent = "";
+    d.forEach((date, i) => {
+      const b = document.createElement("button"); b.type = "button"; b.className = "tile"; b.dataset.date = date;
+      const cam = cams[date], fires = i ? hot.filter((q) => q[2] > d[i - 1] && q[2] <= date).length : 0;
+      const camText = cam ? `${cam.sensor} ${short(cam.hls_date)}, ${pct(cam.cloud)} cloud by its own mask` : "no camera pass within 3 days";
+      b.title = `Radar pass ${fmt(date)}. Camera: ${camText}.`;
+      b.setAttribute("aria-label", b.title);
+      b.innerHTML = `<span class="pics"><span class="pic">${cam ? `<img loading="lazy" alt="" src="${D + cam.file}">` : "No camera pass"}</span>` +
+        `<span class="pic"><img loading="lazy" alt="" src="${thumbs[date] || `${D}img/${state.w}_t${state.tr}_${date}_hv.webp`}"></span></span>` +
+        `<span class="tl"><b>${short(date)}</b><span>${i ? num(fires) + " fires" : "first pass"}</span></span>`;
       b.addEventListener("click", () => {
         stopPlay();
         if (date > state.a) state.b = date;
@@ -304,35 +281,17 @@
         else { state.a = d[0]; state.b = date; }
         syncDates(); render();
       });
-      rad.appendChild(b);
-    }
-    // month ticks
-    const ax = $("t-axis"); ax.textContent = "";
-    const s0 = new Date(span[0] * 864e5), s1 = new Date(span[1] * 864e5);
-    for (let m = new Date(Date.UTC(s0.getUTCFullYear(), s0.getUTCMonth() + 1, 1)); m <= s1; m = new Date(Date.UTC(m.getUTCFullYear(), m.getUTCMonth() + 1, 1))) {
-      const el = document.createElement("span"); el.textContent = MONTHS[m.getUTCMonth()];
-      el.style.left = ((m / 864e5 - span[0]) / (span[1] - span[0])) * 100 + "%"; ax.appendChild(el);
-    }
+      film.appendChild(b);
+    });
   }
   function markTimeline() {
-    if (!span) return;
-    for (const b of $("t-rad").children) {
+    const film = $("film");
+    for (const b of film.children) {
       b.classList.toggle("is-a", b.dataset.date === state.a); b.classList.toggle("is-b", b.dataset.date === state.b);
       b.setAttribute("aria-pressed", String(b.dataset.date === state.b));
+      if (b.dataset.date === state.b && film.scrollWidth > film.clientWidth) film.scrollLeft = b.offsetLeft - film.clientWidth / 2 + b.offsetWidth / 2;
     }
-    const sel = $("t-sel"); if (sel) { sel.style.left = xp(state.a) + "%"; sel.style.width = (xp(state.b) - xp(state.a)) + "%"; }
   }
-  function showTip(b) {
-    const tip = $("tip"), box = $("track").parentElement.getBoundingClientRect(), r = b.getBoundingClientRect();
-    tip.innerHTML = (b.dataset.img ? `<img src="${b.dataset.img}" alt="">` : "") + b.dataset.tip;
-    tip.hidden = false;
-    const w = tip.offsetWidth, x = Math.min(Math.max(8, r.left + r.width / 2 - box.left - w / 2), box.width - w - 8);
-    tip.style.left = x + "px";
-  }
-  const hideTip = () => { $("tip").hidden = true; };
-  for (const ev of ["mouseover", "focusin"]) $("t-cam").addEventListener(ev, (e) => { if (e.target.classList.contains("om")) showTip(e.target); });
-  for (const ev of ["mouseout", "focusout"]) $("t-cam").addEventListener(ev, (e) => { if (e.target.classList.contains("om")) hideTip(); });
-  $("t-cam").addEventListener("click", (e) => { if (e.target.classList.contains("om")) showTip(e.target); });
 
   /* Play: step the after date through the season, one pass at a time. */
   let playTimer = null;
@@ -392,10 +351,20 @@
   function placeboPair() { const p = trk().pre_season; return [p[p.length - 2], p[p.length - 1]]; }
 
   function controls() {
-    seg($("pick-window"), Object.entries(meta.windows).map(([k, v]) => [k, v.label]), state.w, async (w) => {
-      state.w = w; if (!win().tracks[state.tr]) state.tr = Object.keys(win().tracks)[0];
-      await enter(false);
-    });
+    const pw = $("pick-window"); pw.textContent = "";
+    for (const [k, v] of Object.entries(meta.windows)) {
+      const parts = v.label.split(", "), b = document.createElement("button");
+      b.type = "button"; b.setAttribute("aria-pressed", String(k === state.w)); b.setAttribute("aria-label", v.label);
+      const n = document.createElement("span"); n.className = "pn"; n.textContent = parts[0].replace("Window ", "");
+      const t = document.createElement("span"); t.className = "pt"; t.textContent = parts[1] || parts[0];
+      if (parts.length > 2) { const sm = document.createElement("small"); sm.textContent = parts.slice(2).join(", "); t.appendChild(sm); }
+      b.append(n, t);
+      b.addEventListener("click", async () => {
+        stopPlay(); state.w = k; if (!win().tracks[state.tr]) state.tr = Object.keys(win().tracks)[0];
+        await enter(false);
+      });
+      pw.appendChild(b);
+    }
     seg($("pick-track"), Object.entries(win().tracks).map(([k, v]) => [k, `Track ${k}, ${v.direction}`]), state.tr, async (t) => {
       state.tr = t; await enter(true);
     });

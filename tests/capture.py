@@ -42,11 +42,12 @@ with sync_playwright() as p:
     page.wait_for_timeout(2500)   # the arrival sweep
     s = shot("01_default", full=True)
     print("  readout: AUC", page.inner_text("#r-auc"), "| right", page.inner_text("#r-prec"), "| false alarms", page.inner_text("#r-fa"), "| caught", page.inner_text("#r-rec"))
-    print("  timeline:", page.locator("#t-cam .om").count(), "optical marks,", page.locator("#t-rad .rm").count(), "radar marks,", page.locator("#t-hist rect").count(), "hotspot bars")
-    print("  periods: " + " | ".join(page.locator("#t-periods .plab").all_inner_texts()))
-    page.locator("#t-cam .om.usable").first.hover(); page.wait_for_timeout(400)
-    page.locator(".time").screenshot(path=str(out / "13_timeline_tip.png"))
-    page.locator("#t-rad .rm").nth(3).click(); shot("14_radar_mark")
+    print("  filmstrip:", page.locator("#film .tile").count(), "tiles,", page.locator("#film .tile img").count(), "images, loaded:",
+          page.evaluate("[...document.querySelectorAll('#film img')].filter(i => i.complete && i.naturalWidth).length"))
+    print("  periods: " + " | ".join(page.locator("#t-counts span").all_inner_texts()))
+    page.locator(".time").screenshot(path=str(out / "13_filmstrip.png"))
+    page.locator("#film .tile").nth(3).click(); shot("14_tile_click")
+    print("  places:", page.locator("#pick-window button").count())
     page.click("#preset-placebo"); page.click("#play"); page.wait_for_timeout(1400 * 3 + 600)
     print("  after 3 play steps:", page.inner_text("#tag-b"), "| playing:", "playing" in (page.get_attribute("#play", "class") or ""))
     page.click("#play")

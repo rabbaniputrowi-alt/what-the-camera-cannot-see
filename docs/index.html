@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>What the camera cannot see: NISAR radar over the 2026 Indonesian fire season</title>
 <meta name="description" content="An interactive viewer of NISAR L-band radar over the 2026 fires in Kalimantan, Sumatra and South Papua, set against every optical satellite pass of the season.">
-<meta name="theme-color" content="#17110e">
+<meta name="theme-color" content="#151622">
 <link rel="icon" href="data:,">
-<link rel="preload" href="fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="fonts/firasans-Regular.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -62,9 +62,16 @@
         <button type="button" data-mode="radar">Radar before and after</button>
       </div>
     </div>
+    <div class="group layers">
+      <p class="glabel">Layers on the radar side</p>
+      <label><input type="checkbox" id="layer-change" checked> <span class="sw sw-drop"></span> <span>Radar change (red: echo got weaker, blue: stronger)</span></label>
+      <label><input type="checkbox" id="layer-rule"> <span class="sw sw-rule"></span> <span>The rule: echo fell by 1 dB or more</span></label>
+      <label><input type="checkbox" id="layer-hot"> <span class="sw sw-hot"></span> <span>Fire hotspots between the two dates (VIIRS, <span id="hot-count">0</span>)</span></label>
+      <label><input type="checkbox" id="layer-opt"> <span class="sw sw-burn"></span> <span>Optical burn map (orange: burned, dark red: severe, grey: no clear view)</span></label>
+    </div>
     <div class="group">
       <p class="glabel" id="l-place">Place</p>
-      <div id="pick-window" class="seg list" role="group" aria-labelledby="l-place"></div>
+      <div id="pick-window" class="places" role="group" aria-labelledby="l-place"></div>
     </div>
     <div class="group">
       <p class="glabel" id="l-orbit">Orbit</p>
@@ -76,13 +83,6 @@
         <button type="button" data-pol="hv">HV (cross-polarized)</button>
         <button type="button" data-pol="hh">HH (co-polarized)</button>
       </div>
-    </div>
-    <div class="group layers">
-      <p class="glabel">Layers on the radar side</p>
-      <label><input type="checkbox" id="layer-change" checked> <span class="sw sw-drop"></span> <span>Radar change (red: echo got weaker, blue: stronger)</span></label>
-      <label><input type="checkbox" id="layer-rule"> <span class="sw sw-rule"></span> <span>The rule: echo fell by 1 dB or more</span></label>
-      <label><input type="checkbox" id="layer-hot"> <span class="sw sw-hot"></span> <span>Fire hotspots between the two dates (VIIRS, <span id="hot-count">0</span>)</span></label>
-      <label><input type="checkbox" id="layer-opt"> <span class="sw sw-burn"></span> <span>Optical burn map (orange: burned, dark red: severe, grey: no clear view)</span></label>
     </div>
     <p class="camnote" id="cam-note" hidden></p>
   </aside>
@@ -99,15 +99,8 @@
         <button type="button" id="preset-placebo">Placebo pair</button>
       </span>
     </div>
-    <div class="track" id="track">
-      <div class="periods" id="t-periods"></div>
-      <span class="rowl hist-l">Fires</span>
-      <svg class="hist" id="t-hist" preserveAspectRatio="none" aria-hidden="true"></svg>
-      <div class="row row-cam"><span class="rowl">Camera</span><div class="lane" id="t-cam"></div></div>
-      <div class="row row-rad"><span class="rowl">Radar</span><div class="lane" id="t-rad"></div></div>
-      <div class="axis" id="t-axis"></div>
-    </div>
-    <div class="tip" id="tip" hidden></div>
+    <p class="counts" id="t-counts"></p>
+    <div class="film" id="film" role="group" aria-label="Radar passes on this orbit, each with the camera image from the same days"></div>
   </section>
 </div>
 
@@ -179,7 +172,7 @@
     <section>
       <h3>Data, code and credits</h3>
       <p>Radar: NISAR L2 GCOV (NASA and ISRO), read from the Alaska Satellite Facility DAAC. Fire detections: NASA FIRMS, VIIRS 375 m. Optical: NASA Harmonized Landsat and Sentinel-2 (HLS) v2.0. Full list with links: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see/blob/main/REFERENCES.md">REFERENCES.md</a>.</p>
-      <p>Code and method: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see">github.com/rabbaniputrowi-alt/what-the-camera-cannot-see</a>, MIT licence. Built for the NASA Space Apps Challenge 2026, challenge "Dancing with the SARs", Jakarta local event. This project is not endorsed by NASA. Set in Archivo (SIL Open Font License, <a href="fonts/OFL-Archivo.txt">licence text</a>).</p>
+      <p>Code and method: <a href="https://github.com/rabbaniputrowi-alt/what-the-camera-cannot-see">github.com/rabbaniputrowi-alt/what-the-camera-cannot-see</a>, MIT licence. Built for the NASA Space Apps Challenge 2026, challenge "Dancing with the SARs", Jakarta local event. This project is not endorsed by NASA. Set in Fira Sans (SIL Open Font License, <a href="fonts/OFL-FiraSans.txt">licence text</a>).</p>
       <p class="placeholder" id="ai-statement">PLACEHOLDER (AI statement): Rabbani's statement on how AI tools were used goes here.</p>
     </section>
   </div>
